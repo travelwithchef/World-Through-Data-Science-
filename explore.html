@@ -1,85 +1,159 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Explore Countries - World Through Data Science</title>
-    <!-- Bootstrap 5 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            background-color: #f4f4f4;
-            font-family: Arial, sans-serif;
-        }
-        header {
-            background-color: #282c34;
-            color: white;
-            padding: 20px 0;
-            text-align: center;
-        }
-        .container {
-            margin-top: 30px;
-        }
-        .btn-country {
-            background-color: #28a745;
-            color: white;
-            font-size: 1rem;
-            padding: 10px 20px;
-            border-radius: 5px;
-            margin-top: 10px;
-        }
-        .btn-country:hover {
-            background-color: #218838;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Explore Countries</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      font-family: 'Montserrat', sans-serif;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: #121212;
+      color: #f5f5f5;
+      padding: 40px 20px;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 2.4rem;
+      margin-bottom: 30px;
+      color: #ffffff;
+    }
+
+    .regions {
+      margin-top: 30px;
+    }
+
+    h2 {
+      color: #dddddd;
+      font-size: 1.4rem;
+      margin-top: 30px;
+    }
+
+    .country-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin: 10px 0 30px;
+    }
+
+    .country-button {
+      background-color: #ffffff;
+      color: #121212;
+      padding: 10px 18px;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s;
+      text-decoration: none;
+    }
+
+    .country-button:hover {
+      background-color: #cccccc;
+    }
+
+    footer {
+      margin-top: 60px;
+      font-size: 0.9rem;
+      color: #999;
+    }
+  </style>
 </head>
 <body>
+  <h1>Explore Countries by Region</h1>
 
-    <!-- Header Section -->
-    <header>
-        <h1>Explore Countries</h1>
-        <p>Select a country to explore street views and data insights.</p>
-    </header>
+  <div class="regions">
 
-    <!-- Countries List Section -->
-    <div class="container">
-        <div class="row">
-            <!-- Example Countries -->
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-body text-center">
-                        <h5 class="card-title">Spain</h5>
-                        <a href="spain.html" class="btn btn-country">Explore Spain</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-body text-center">
-                        <h5 class="card-title">India</h5>
-                        <a href="india.html" class="btn btn-country">Explore India</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-body text-center">
-                        <h5 class="card-title">United States</h5>
-                        <a href="us.html" class="btn btn-country">Explore USA</a>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <h2>Africa</h2>
+    <div class="country-list">
+      <a class="country-button">Algeria</a>
+      <a class="country-button">Egypt</a>
+      <a class="country-button">Ethiopia</a>
+      <a class="country-button">Libya</a>
+      <a class="country-button">Morocco</a>
+      <a class="country-button">Nigeria</a>
+      <a class="country-button">Tanzania</a>
+      <a class="country-button">Tunisia</a>
+      <a class="country-button">Zimbabwe</a>
     </div>
 
-    <!-- Footer Section -->
-    <footer>
-        <p>&copy; 2025 World Through Data Science | All Rights Reserved</p>
-    </footer>
+    <h2>Asia</h2>
+    <div class="country-list">
+      <a class="country-button">Azerbaijan</a>
+      <a class="country-button">Bahrain</a>
+      <a class="country-button">China</a>
+      <a class="country-button">India</a>
+      <a class="country-button">Iran</a>
+      <a class="country-button">Japan</a>
+      <a class="country-button">Jordan</a>
+      <a class="country-button">Malaysia</a>
+      <a class="country-button">Mongolia</a>
+      <a class="country-button">Pakistan</a>
+      <a class="country-button">Palestine</a>
+      <a class="country-button">Saudi Arabia</a>
+      <a class="country-button">Sri Lanka</a>
+      <a class="country-button">Turkey</a>
+      <a class="country-button">Yemen</a>
+    </div>
 
-    <!-- Bootstrap 5 JS and Popper.js (for responsiveness) -->
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+    <h2>Europe</h2>
+    <div class="country-list">
+      <a class="country-button">Austria</a>
+      <a class="country-button">Bulgaria</a>
+      <a class="country-button">France</a>
+      <a class="country-button">Germany</a>
+      <a class="country-button">Greece</a>
+      <a class="country-button">Hungary</a>
+      <a class="country-button">Italy</a>
+      <a class="country-button">Monaco</a>
+      <a class="country-button">Macedonia</a>
+      <a class="country-button">Portugal</a>
+      <a class="country-button">Romania</a>
+      <a class="country-button">Russia</a>
+      <a class="country-button">San Marino</a>
+      <a class="country-button">Spain</a>
+      <a class="country-button">Switzerland</a>
+      <a class="country-button">Vatican City</a>
+    </div>
+
+    <h2>North America</h2>
+    <div class="country-list">
+      <a class="country-button">Antigua and Barbuda</a>
+      <a class="country-button">Costa Rica</a>
+      <a class="country-button">El Salvador</a>
+      <a class="country-button">Saint Lucia</a>
+      <a class="country-button">USA</a>
+    </div>
+
+    <h2>South America</h2>
+    <div class="country-list">
+      <a class="country-button">Argentina</a>
+      <a class="country-button">Brazil</a>
+      <a class="country-button">Guyana</a>
+      <a class="country-button">Paraguay</a>
+      <a class="country-button">Uruguay</a>
+      <a class="country-button">Vietnam</a>
+    </div>
+
+    <h2>Oceania</h2>
+    <div class="country-list">
+      <a class="country-button">Australia</a>
+      <a class="country-button">New Zealand</a>
+      <a class="country-button">Solomon Islands</a>
+    </div>
+
+  </div>
+
+  <footer>
+    &copy; 2025 TravelWithChef | Explore the world, one country at a time.
+  </footer>
 </body>
 </html>
