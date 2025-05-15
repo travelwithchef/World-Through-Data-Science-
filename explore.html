@@ -1,105 +1,176 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Explore Countries</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Explore Flags</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #121212;
+      background-color: #111;
       color: #fff;
       margin: 0;
       padding: 0;
     }
-    .continent {
-      margin: 30px;
+
+    nav {
+      background-color: #1a1a1a;
+      padding: 15px 0;
+      text-align: center;
+      border-bottom: 1px solid #333;
     }
+
+    nav a {
+      color: #f5f5f5;
+      margin: 0 15px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
     h2 {
-      background-color: #1f1f1f;
+      background-color: #222;
       padding: 15px;
+      margin: 0;
       cursor: pointer;
-      border-radius: 5px;
+      border-bottom: 1px solid #444;
     }
-    .country-grid {
+
+    .continent-section {
       display: none;
-      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      padding: 20px;
+      display: flex;
+      flex-wrap: wrap;
       gap: 15px;
-      margin-top: 15px;
+      justify-content: center;
     }
-    .country {
+
+    .flag-card {
+      width: 150px;
       position: relative;
+      cursor: pointer;
       overflow: hidden;
       border-radius: 10px;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      transition: transform 0.3s, box-shadow 0.3s;
     }
-    .country:hover {
+
+    .flag-card:hover {
       transform: scale(1.05);
-      box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+      box-shadow: 0 0 10px #00ffff88;
     }
-    .country img {
+
+    .flag-card img {
       width: 100%;
-      display: block;
+      height: auto;
       border-radius: 10px;
+      display: block;
     }
-    .country-name {
+
+    .overlay {
       position: absolute;
       bottom: 0;
       background: rgba(0, 0, 0, 0.6);
+      color: #fff;
       width: 100%;
       text-align: center;
       padding: 5px 0;
-      font-size: 14px;
+      font-weight: bold;
     }
   </style>
 </head>
-<body>  <nav style="background-color: #1a1a1a; padding: 15px 0; text-align: center; border-bottom: 1px solid #333;">
-    <a href="index.html" style="color: #f5f5f5; margin: 0 15px; text-decoration: none; font-weight: bold;">Home</a>
-    <a href="explore.html" style="color: #f5f5f5; margin: 0 15px; text-decoration: none; font-weight: bold;">Explore</a>
-    <a href="flags.html" style="color: #f5f5f5; margin: 0 15px; text-decoration: none; font-weight: bold;">Flags</a>
-    <a href="lab.html" style="color: #f5f5f5; margin: 0 15px; text-decoration: none; font-weight: bold;">Lab</a>
-  </nav>  <div class="container">
-    <!-- Repeat block below per continent -->
-    <div class="continent">
-      <h2 onclick="toggleSection(this)">Africa</h2>
-      <div class="country-grid">
-        <div class="country" title="Algeria"><img src="flags/algeria-flag.jpg"><div class="country-name">Algeria</div></div>
-        <div class="country" title="Egypt"><img src="flags/egypt-flag.jpg"><div class="country-name">Egypt</div></div>
-        <div class="country" title="Ethiopia"><img src="flags/ethiopia-flag.jpg"><div class="country-name">Ethiopia</div></div>
-        <div class="country" title="Libya"><img src="flags/libya-flag.jpg"><div class="country-name">Libya</div></div>
-        <div class="country" title="Morocco"><img src="flags/morocco-flag.jpg"><div class="country-name">Morocco</div></div>
-        <div class="country" title="Nigeria"><img src="flags/nigeria-flag.jpg"><div class="country-name">Nigeria</div></div>
-        <div class="country" title="Tanzania"><img src="flags/tanzania-flag.jpg"><div class="country-name">Tanzania</div></div>
-        <div class="country" title="Tunisia"><img src="flags/tunisia-flag.jpg"><div class="country-name">Tunisia</div></div>
-        <div class="country" title="Zimbabwe"><img src="flags/zimbabwe-flag.jpg"><div class="country-name">Zimbabwe</div></div>
-      </div>
-    </div><div class="continent">
-  <h2 onclick="toggleSection(this)">Asia</h2>
-  <div class="country-grid">
-    <div class="country" title="Azerbaijan"><img src="flags/azerbaijan-flag.jpg"><div class="country-name">Azerbaijan</div></div>
-    <div class="country" title="Bahrain"><img src="flags/bahrain-flag.jpg"><div class="country-name">Bahrain</div></div>
-    <div class="country" title="China"><img src="flags/china-flag.jpg"><div class="country-name">China</div></div>
-    <div class="country" title="India"><img src="flags/india-flag.jpg"><div class="country-name">India</div></div>
-    <div class="country" title="Iran"><img src="flags/iran-flag.jpg"><div class="country-name">Iran</div></div>
-    <div class="country" title="Japan"><img src="flags/japan-flag.jpg"><div class="country-name">Japan</div></div>
-    <div class="country" title="Jordan"><img src="flags/jordan-flag.jpg"><div class="country-name">Jordan</div></div>
-    <div class="country" title="Malaysia"><img src="flags/malaysia-flag.jpg"><div class="country-name">Malaysia</div></div>
-    <div class="country" title="Mongolia"><img src="flags/mongolia-flag.jpg"><div class="country-name">Mongolia</div></div>
-    <div class="country" title="Pakistan"><img src="flags/pakistan-flag.jpg"><div class="country-name">Pakistan</div></div>
-    <div class="country" title="Palestine"><img src="flags/palestine-flag.jpg"><div class="country-name">Palestine</div></div>
-    <div class="country" title="Saudi Arabia"><img src="flags/saudi-arabia-flag.jpg"><div class="country-name">Saudi Arabia</div></div>
-    <div class="country" title="Sri Lanka"><img src="flags/sri-lanka-flag.png"><div class="country-name">Sri Lanka</div></div>
-    <div class="country" title="Turkey"><img src="flags/turkey-flag.png"><div class="country-name">Turkey</div></div>
-    <div class="country" title="Vietnam"><img src="flags/vietnam-flag.jpg"><div class="country-name">Vietnam</div></div>
-    <div class="country" title="Yemen"><img src="flags/yemen-flag.jpg"><div class="country-name">Yemen</div></div>
-  </div>
+<body>
+
+<nav>
+  <a href="index.html">Home</a>
+  <a href="explore.html">Explore</a>
+  <a href="flags.html">Flags</a>
+  <a href="lab.html">Lab</a>
+</nav>
+
+<!-- CONTINENTS + COUNTRIES -->
+<h2 onclick="toggleSection('africa')">Africa</h2>
+<div class="continent-section" id="africa">
+  <div class="flag-card" title="Algeria"><img src="flags/algeria-flag.jpg"><div class="overlay">Algeria</div></div>
+  <div class="flag-card" title="Egypt"><img src="flags/egypt-flag.jpg"><div class="overlay">Egypt</div></div>
+  <div class="flag-card" title="Ethiopia"><img src="flags/ethiopia-flag.jpg"><div class="overlay">Ethiopia</div></div>
+  <div class="flag-card" title="Libya"><img src="flags/libya-flag.jpg"><div class="overlay">Libya</div></div>
+  <div class="flag-card" title="Morocco"><img src="flags/morocco-flag.jpg"><div class="overlay">Morocco</div></div>
+  <div class="flag-card" title="Nigeria"><img src="flags/nigeria-flag.jpg"><div class="overlay">Nigeria</div></div>
+  <div class="flag-card" title="Tanzania"><img src="flags/tanzania-flag.jpg"><div class="overlay">Tanzania</div></div>
+  <div class="flag-card" title="Tunisia"><img src="flags/tunisia-flag.jpg"><div class="overlay">Tunisia</div></div>
+  <div class="flag-card" title="Zimbabwe"><img src="flags/zimbabwe-flag.jpg"><div class="overlay">Zimbabwe</div></div>
 </div>
 
-<!-- Other continents below follow same structure -->
-<!-- Europe, North America, South America, Oceania blocks here (trimmed for brevity, will include next if requested) -->
+<h2 onclick="toggleSection('asia')">Asia</h2>
+<div class="continent-section" id="asia">
+  <div class="flag-card" title="Azerbaijan"><img src="flags/azerbaijan-flag.jpg"><div class="overlay">Azerbaijan</div></div>
+  <div class="flag-card" title="Bahrain"><img src="flags/bahrain-flag.jpg"><div class="overlay">Bahrain</div></div>
+  <div class="flag-card" title="China"><img src="flags/china-flag.jpg"><div class="overlay">China</div></div>
+  <div class="flag-card" title="India"><img src="flags/india-flag.jpg"><div class="overlay">India</div></div>
+  <div class="flag-card" title="Iran"><img src="flags/iran-flag.jpg"><div class="overlay">Iran</div></div>
+  <div class="flag-card" title="Japan"><img src="flags/japan-flag.jpg"><div class="overlay">Japan</div></div>
+  <div class="flag-card" title="Jordan"><img src="flags/jordan-flag.jpg"><div class="overlay">Jordan</div></div>
+  <div class="flag-card" title="Malaysia"><img src="flags/malaysia-flag.jpg"><div class="overlay">Malaysia</div></div>
+  <div class="flag-card" title="Mongolia"><img src="flags/mongolia-flag.jpg"><div class="overlay">Mongolia</div></div>
+  <div class="flag-card" title="Pakistan"><img src="flags/pakistan-flag.jpg"><div class="overlay">Pakistan</div></div>
+  <div class="flag-card" title="Palestine"><img src="flags/palestine-flag.jpg"><div class="overlay">Palestine</div></div>
+  <div class="flag-card" title="Saudi Arabia"><img src="flags/saudi-arabia-flag.jpg"><div class="overlay">Saudi Arabia</div></div>
+  <div class="flag-card" title="Sri Lanka"><img src="flags/sri-lanka-flag.png"><div class="overlay">Sri Lanka</div></div>
+  <div class="flag-card" title="Turkey"><img src="flags/turkey-flag.png"><div class="overlay">Turkey</div></div>
+  <div class="flag-card" title="Vietnam"><img src="flags/vietnam-flag.jpg"><div class="overlay">Vietnam</div></div>
+  <div class="flag-card" title="Yemen"><img src="flags/yemen-flag.jpg"><div class="overlay">Yemen</div></div>
+</div>
 
-  </div>  <script>
-    function toggleSection(header) {
-      const grid = header.nextElementSibling;
-      grid.style.display = grid.style.display === 'grid' ? 'none' : 'grid';
-    }
-  </script></body>
-</html>
+<h2 onclick="toggleSection('europe')">Europe</h2>
+<div class="continent-section" id="europe">
+  <div class="flag-card" title="Austria"><img src="flags/austria-flag.png"><div class="overlay">Austria</div></div>
+  <div class="flag-card" title="Bulgaria"><img src="flags/bulgaria-flag.png"><div class="overlay">Bulgaria</div></div>
+  <div class="flag-card" title="France"><img src="flags/france-flag.png"><div class="overlay">France</div></div>
+  <div class="flag-card" title="Germany"><img src="flags/germany-flag.png"><div class="overlay">Germany</div></div>
+  <div class="flag-card" title="Greece"><img src="flags/greece-flag.png"><div class="overlay">Greece</div></div>
+  <div class="flag-card" title="Hungary"><img src="flags/hungary-flag.png"><div class="overlay">Hungary</div></div>
+  <div class="flag-card" title="Italy"><img src="flags/italy-flag.png"><div class="overlay">Italy</div></div>
+  <div class="flag-card" title="Monaco"><img src="flags/monaco-flag.png"><div class="overlay">Monaco</div></div>
+  <div class="flag-card" title="Macedonia"><img src="flags/macedonia-flag.png"><div class="overlay">Macedonia</div></div>
+  <div class="flag-card" title="Portugal"><img src="flags/portugal-flag.png"><div class="overlay">Portugal</div></div>
+  <div class="flag-card" title="Romania"><img src="flags/romania-flag.png"><div class="overlay">Romania</div></div>
+  <div class="flag-card" title="Russia"><img src="flags/russia-flag.png"><div class="overlay">Russia</div></div>
+  <div class="flag-card" title="San Marino"><img src="flags/san-marino-flag.png"><div class="overlay">San Marino</div></div>
+  <div class="flag-card" title="Spain"><img src="flags/spain-flag.png"><div class="overlay">Spain</div></div>
+  <div class="flag-card" title="Switzerland"><img src="flags/switzerland-flag.png"><div class="overlay">Switzerland</div></div>
+  <div class="flag-card" title="Vatican City"><img src="flags/vetican-city-flag.png"><div class="overlay">Vatican City</div></div>
+</div>
+
+<h2 onclick="toggleSection('north-america')">North America</h2>
+<div class="continent-section" id="north-america">
+  <div class="flag-card" title="Antigua and Barbuda"><img src="flags/antigua-and-barbuda-flag.png"><div class="overlay">Antigua & Barbuda</div></div>
+  <div class="flag-card" title="Costa Rica"><img src="flags/costa-rica-flag.png"><div class="overlay">Costa Rica</div></div>
+  <div class="flag-card" title="El Salvador"><img src="flags/el-saovador-flag.png"><div class="overlay">El Salvador</div></div>
+  <div class="flag-card" title="Saint Lucia"><img src="flags/saint-lucia-flag.png"><div class="overlay">Saint Lucia</div></div>
+  <div class="flag-card" title="USA"><img src="flags/usa-flag.png"><div class="overlay">USA</div></div>
+</div>
+
+<h2 onclick="toggleSection('south-america')">South America</h2>
+<div class="continent-section" id="south-america">
+  <div class="flag-card" title="Argentina"><img src="flags/argentina-flag.png"><div class="overlay">Argentina</div></div>
+  <div class="flag-card" title="Brazil"><img src="flags/brazil-flag.png"><div class="overlay">Brazil</div></div>
+  <div class="flag-card" title="Guyana"><img src="flags/guyana-flag.png"><div class="overlay">Guyana</div></div>
+  <div class="flag-card" title="Paraguay"><img src="flags/paraguay-flag.png"><div class="overlay">Paraguay</div></div>
+  <div class="flag-card" title="Uruguay"><img src="flags/uruguay-flag.png"><div class="overlay">Uruguay</div></div>
+</div>
+
+<h2 onclick="toggleSection('oceania')">Oceania</h2>
+<div class="continent-section" id="oceania">
+  <div class="flag-card" title="Australia"><img src="flags/australia-flag.png"><div class="overlay">Australia</div></div>
+  <div class="flag-card" title="New Zealand"><img src="flags/new-zealand-flag.png"><div class="overlay">New Zealand</div></div>
+  <div class="flag-card" title="Solomon Islands"><img src="flags/solomon-islands-flag.png"><div class="overlay">Solomon Islands</div></div>
+</div>
+
+<script>
+  function toggleSection(id) {
+    const section = document.getElementById(id);
+    section.style.display = section.style.display === "flex" ? "none" : "flex";
+  }
+</script>
+
+</body>
+  </html>
