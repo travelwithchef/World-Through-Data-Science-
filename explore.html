@@ -1,83 +1,96 @@
-<!DOCTYPE html><html lang="en">
-<head>
+<!DOCTYPE html><html lang="en"><head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Explore Countries</title>
   <style>
     body {
-      margin: 0;
-      font-family: 'Courier New', Courier, monospace;
       background-color: #111;
       color: #fff;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 30px 10px;
+      font-family: 'Courier New', Courier, monospace;
+      margin: 0;
+      padding: 0;
     }h1 {
-  color: #eee;
-  font-size: 36px;
-  margin-bottom: 30px;
   text-align: center;
-  letter-spacing: 3px;
-  text-transform: uppercase;
+  color: #f0f0f0;
+  padding: 20px;
 }
 
-.continent {
-  width: 100%;
-  max-width: 800px;
-  margin: 20px auto;
+.continent-section {
+  padding: 20px;
 }
 
-.continent h2 {
-  background-color: #333;
-  color: #fff;
-  padding: 15px 20px;
-  margin: 0;
-  font-size: 24px;
-  text-transform: uppercase;
-  border: 1px solid #444;
-  letter-spacing: 2px;
-  cursor: pointer;
+.continent-title {
+  font-size: 2rem;
+  margin-bottom: 10px;
+  border-bottom: 2px solid #444;
+  color: #ddd;
 }
 
-.country-list {
-  display: none;
-  flex-wrap: wrap;
-  justify-content: center;
-  border: 1px solid #444;
-  border-top: none;
-  background: #000;
+.country-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 15px;
 }
 
 .country {
-  background: #000;
+  background-color: #222;
   color: #fff;
-  font-size: 20px;
-  font-weight: bold;
-  border: 1px solid #444;
-  width: 90%;
-  max-width: 480px;
-  margin: 8px auto;
-  padding: 15px;
+  border: 2px solid #444;
+  padding: 20px;
   text-align: center;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  box-shadow: 0 0 5px rgba(255, 255, 255, 0.1);
-  transition: all 0.3s ease-in-out;
+  font-size: 1.1rem;
+  letter-spacing: 1px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+  transition: transform 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+
+.country::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  animation: scan 3s linear infinite;
+}
+
+@keyframes scan {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
 }
 
 .country:hover {
-  background: #222;
-  transform: scale(1.02);
-  cursor: pointer;
+  transform: scale(1.05);
+}
+
+.flip-letter {
+  display: inline-block;
+  animation: flip 0.6s ease-in-out;
+}
+
+@keyframes flip {
+  0% {
+    transform: rotateX(90deg);
+    opacity: 0;
+  }
+  100% {
+    transform: rotateX(0);
+    opacity: 1;
+  }
 }
 
   </style>
-</head>
-<body>
-  <h1>Global Departures</h1>  <div class="continent">
-    <h2 onclick="toggleList(this)">Africa</h2>
-    <div class="country-list">
+</head><body>
+  <h1>Explore Countries</h1>  <div class="continent-section">
+    <div class="continent-title">Africa</div>
+    <div class="country-grid">
       <div class="country">Algeria</div>
       <div class="country">Egypt</div>
       <div class="country">Ethiopia</div>
@@ -88,9 +101,9 @@
       <div class="country">Tunisia</div>
       <div class="country">Zimbabwe</div>
     </div>
-  </div>  <div class="continent">
-    <h2 onclick="toggleList(this)">Asia</h2>
-    <div class="country-list">
+  </div>  <div class="continent-section">
+    <div class="continent-title">Asia</div>
+    <div class="country-grid">
       <div class="country">Azerbaijan</div>
       <div class="country">Bahrain</div>
       <div class="country">China</div>
@@ -108,9 +121,9 @@
       <div class="country">Vietnam</div>
       <div class="country">Yemen</div>
     </div>
-  </div>  <div class="continent">
-    <h2 onclick="toggleList(this)">Europe</h2>
-    <div class="country-list">
+  </div>  <div class="continent-section">
+    <div class="continent-title">Europe</div>
+    <div class="country-grid">
       <div class="country">Austria</div>
       <div class="country">Bulgaria</div>
       <div class="country">France</div>
@@ -128,35 +141,30 @@
       <div class="country">Switzerland</div>
       <div class="country">Vetican City</div>
     </div>
-  </div>  <div class="continent">
-    <h2 onclick="toggleList(this)">North America</h2>
-    <div class="country-list">
+  </div>  <div class="continent-section">
+    <div class="continent-title">North America</div>
+    <div class="country-grid">
       <div class="country">Antigua and Barbuda</div>
       <div class="country">Costa Rica</div>
       <div class="country">El Salvador</div>
       <div class="country">Saint Lucia</div>
       <div class="country">USA</div>
     </div>
-  </div>  <div class="continent">
-    <h2 onclick="toggleList(this)">South America</h2>
-    <div class="country-list">
+  </div>  <div class="continent-section">
+    <div class="continent-title">South America</div>
+    <div class="country-grid">
       <div class="country">Argentina</div>
       <div class="country">Brazil</div>
       <div class="country">Guyana</div>
       <div class="country">Paraguay</div>
       <div class="country">Uruguay</div>
     </div>
-  </div>  <div class="continent">
-    <h2 onclick="toggleList(this)">Oceania</h2>
-    <div class="country-list">
+  </div>  <div class="continent-section">
+    <div class="continent-title">Oceania</div>
+    <div class="country-grid">
       <div class="country">Australia</div>
       <div class="country">New Zealand</div>
       <div class="country">Solomon Islands</div>
     </div>
-  </div>  <script>
-    function toggleList(header) {
-      const list = header.nextElementSibling;
-      list.style.display = list.style.display === 'flex' ? 'none' : 'flex';
-    }
-  </script></body>
-</html>
+  </div>
+</body></html>
