@@ -1,5 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,268 +6,148 @@
   <style>
     body {
       margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: radial-gradient(#1a1a1a, #000000);
-      color: #f5f5f5;
-      overflow-x: hidden;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to right, #f7f8fa, #e0eafc);
     }
-
-    nav {
-      background-color: #111;
-      padding: 15px 0;
+    h2 {
       text-align: center;
-      border-bottom: 1px solid #333;
-    }
-
-    nav a {
-      color: #f5f5f5;
-      margin: 0 15px;
-      text-decoration: none;
-      font-weight: bold;
-      transition: 0.3s;
-    }
-
-    nav a:hover {
-      color: #00ffff;
-    }
-
-    .search-bar {
-      text-align: center;
-      margin: 20px auto;
-    }
-
-    .search-bar input {
-      padding: 10px 20px;
-      border-radius: 25px;
-      border: none;
-      width: 60%;
+      cursor: pointer;
+      margin-top: 40px;
+      background: #000;
+      color: #fff;
+      padding: 10px;
+      border-radius: 8px;
       max-width: 500px;
-      font-size: 16px;
-      outline: none;
-      box-shadow: 0 0 10px #00ffff44;
+      margin-left: auto;
+      margin-right: auto;
     }
-
-    .continent {
-      margin: 30px;
-    }
-
-    .continent h2 {
-      text-align: left;
-      font-size: 28px;
-      margin-bottom: 15px;
-      border-left: 5px solid #00ffff;
-      padding-left: 10px;
-      cursor: pointer;
-    }
-
-    .countries {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-      justify-content: flex-start;
-      padding-left: 10px;
-      display: none;
-    }
-
-    .country-card {
-      width: 140px;
-      height: 170px;
-      background: rgba(255, 255, 255, 0.05);
-      backdrop-filter: blur(12px);
-      border-radius: 15px;
+    .search-container {
       text-align: center;
-      padding: 15px 10px;
-      box-shadow: 0 0 10px #00ffff44;
-      transition: transform 0.4s ease, box-shadow 0.4s ease;
+      margin: 20px;
     }
-
-    .country-card:hover {
-      transform: rotateY(10deg) scale(1.05);
-      box-shadow: 0 0 20px #00ffffaa;
+    #searchInput {
+      padding: 10px;
+      width: 60%;
+      border: 2px solid #555;
+      border-radius: 8px;
+      font-size: 16px;
     }
-
-    .country-card img {
-      width: 60px;
-      height: auto;
-      margin-bottom: 10px;
+    .continent {
+      margin: 20px auto;
+      max-width: 1200px;
     }
-
-    .back-to-top {
-      position: fixed;
-      bottom: 30px;
-      right: 30px;
-      background: #00ffff;
-      color: #000;
-      padding: 12px 18px;
-      border: none;
-      border-radius: 30px;
-      cursor: pointer;
-      font-weight: bold;
-      box-shadow: 0 0 10px #00ffffaa;
+    .countries {
       display: none;
+      flex-wrap: wrap;
+      gap: 16px;
+      justify-content: center;
+      margin-top: 20px;
     }
-
-    .particles {
-      position: fixed;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 0;
-      background: url('https://www.transparenttextures.com/patterns/stardust.png') repeat;
-      opacity: 0.03;
+    .country {
+      width: 120px;
+      height: 120px;
+      background-color: #f0f0f0;
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      cursor: pointer;
+      position: relative;
+      transition: all 0.3s ease;
     }
-
-    @media (max-width: 600px) {
-      .country-card {
-        width: 100px;
-        height: 140px;
-      }
-
-      .search-bar input {
-        width: 90%;
-      }
+    .country:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+    }
+    .country img {
+      width: 60px;
+      height: 40px;
+      object-fit: cover;
+      border-radius: 4px;
+      margin-bottom: 8px;
+    }
+    .country span {
+      font-weight: bold;
+      font-size: 14px;
+      text-align: center;
+    }
+    .country[data-theme="japan"] { background: #fff; border: 2px solid red; }
+    .country[data-theme="brazil"] { background: #fefefe; border: 2px solid green; }
+    .country[data-theme="france"] { background: #fff; border: 2px solid blue; }
+    .country[data-theme="india"] { background: #fff3e0; border: 2px solid orange; }
+    .toggle-btn {
+      margin-top: 10px;
+      font-size: 14px;
+      color: #444;
     }
   </style>
 </head>
 <body>
+  <div class="search-container">
+    <input type="text" id="searchInput" placeholder="Search countries...">
+  </div>  <div id="continent-sections"></div>  <script>
+    const countryData = {
+      "Africa": ["Algeria", "Egypt", "Ethiopia", "Libya", "Morocco", "Nigeria", "Tanzania", "Tunisia", "Zimbabwe"],
+      "Asia": ["Azerbaijan", "Bahrain", "China", "India", "Iran", "Japan", "Jordan", "Malaysia", "Mongolia", "Pakistan", "Palestine", "Saudi Arabia", "Sri Lanka", "Turkey", "Vietnam", "Yemen"],
+      "Europe": ["Austria", "Bulgaria", "France", "Germany", "Greece", "Hungary", "Italy", "Monaco", "Macedonia", "Portugal", "Romania", "Russia", "San Marino", "Spain", "Switzerland", "Vetican City"],
+      "North America": ["Antigua and Barbuda", "Costa Rica", "El Salvador", "Saint Lucia", "USA"],
+      "South America": ["Argentina", "Brazil", "Guyana", "Paraguay", "Uruguay"],
+      "Oceania": ["Australia", "New Zealand", "Solomon Islands"]
+    };
 
-<div class="particles"></div>
+    const themedCountries = {
+      "Japan": "japan",
+      "Brazil": "brazil",
+      "France": "france",
+      "India": "india"
+    };
 
-<nav>
-  <a href="index.html">Home</a>
-  <a href="explore.html">Explore</a>
-  <a href="flags.html">Flags</a>
-  <a href="lab.html">Lab</a>
-</nav>
+    const container = document.getElementById("continent-sections");
 
-<div class="search-bar">
-  <input type="text" id="searchInput" placeholder="Search for a country..." onkeyup="searchCountries()" />
-</div>
+    for (const [continent, countries] of Object.entries(countryData)) {
+      const section = document.createElement("div");
+      section.className = "continent";
+      const heading = document.createElement("h2");
+      heading.textContent = continent;
 
-<div id="exploreContainer">
-  <!-- Content will be injected here -->
-</div>
+      const countryGrid = document.createElement("div");
+      countryGrid.className = "countries";
 
-<button onclick="scrollToTop()" class="back-to-top" id="topBtn">↑ Top</button>
+      countries.forEach(country => {
+        const div = document.createElement("div");
+        div.className = "country";
+        const themeClass = themedCountries[country] || "";
+        div.setAttribute("data-theme", themeClass);
 
-<script>
-  const countriesData = {
-    "Africa": [
-      { name: "Algeria", flag: "algeria-flag.jpg" },
-      { name: "Egypt", flag: "egypt-flag.jpg" },
-      { name: "Ethiopia", flag: "ethiopia-flag.jpg" },
-      { name: "Libya", flag: "libya-flag.jpg" },
-      { name: "Morocco", flag: "morocco-flag.jpg" },
-      { name: "Nigeria", flag: "nigeria-flag.jpg" },
-      { name: "Tanzania", flag: "tanzania-flag.jpg" },
-      { name: "Tunisia", flag: "tunisia-flag.jpg" },
-      { name: "Zimbabwe", flag: "zimbabwe-flag.jpg" }
-    ],
-    "Asia": [
-      { name: "Azerbaijan", flag: "azerbaijan-flag.jpg" },
-      { name: "Bahrain", flag: "bahrain-flag.jpg" },
-      { name: "China", flag: "china-flag.jpg" },
-      { name: "India", flag: "india-flag.jpg" },
-      { name: "Iran", flag: "iran-flag.jpg" },
-      { name: "Japan", flag: "japan-flag.jpg" },
-      { name: "Jordan", flag: "jordan-flag.jpg" },
-      { name: "Malaysia", flag: "malaysia-flag.jpg" },
-      { name: "Mongolia", flag: "mongolia-flag.jpg" },
-      { name: "Pakistan", flag: "pakistan-flag.jpg" },
-      { name: "Palestine", flag: "palestine-flag.jpg" },
-      { name: "Saudi Arabia", flag: "saudi-arabia-flag.jpg" },
-      { name: "Sri Lanka", flag: "sri-lanka-flag.png" },
-      { name: "Turkey", flag: "turkey-flag.png" },
-      { name: "Vietnam", flag: "vietnam-flag.jpg" },
-      { name: "Yemen", flag: "yemen-flag.jpg" }
-    ],
-    "Europe": [
-      { name: "Austria", flag: "austria-flag.png" },
-      { name: "Bulgaria", flag: "bulgaria-flag.png" },
-      { name: "France", flag: "france-flag.png" },
-      { name: "Germany", flag: "germany-flag.png" },
-      { name: "Greece", flag: "greece-flag.png" },
-      { name: "Hungary", flag: "hungary-flag.png" },
-      { name: "Italy", flag: "italy-flag.png" },
-      { name: "Monaco", flag: "monaco-flag.png" },
-      { name: "Macedonia", flag: "macedonia-flag.png" },
-      { name: "Portugal", flag: "portugal-flag.png" },
-      { name: "Romania", flag: "romania-flag.png" },
-      { name: "Russia", flag: "russia-flag.png" },
-      { name: "San Marino", flag: "san-marino-flag.png" },
-      { name: "Spain", flag: "spain-flag.png" },
-      { name: "Switzerland", flag: "switzerland-flag.png" },
-      { name: "Vetican City", flag: "vetican-city-flag.png" }
-    ],
-    "North America": [
-      { name: "Antigua and Barbuda", flag: "antigua-and-barbuda-flag.png" },
-      { name: "Costa Rica", flag: "costa-rica-flag.png" },
-      { name: "El Salvador", flag: "el-salvador-flag.png" },
-      { name: "Saint Lucia", flag: "saint-lucia-flag.png" },
-      { name: "USA", flag: "usa-flag.png" }
-    ],
-    "South America": [
-      { name: "Argentina", flag: "argentina-flag.png" },
-      { name: "Brazil", flag: "brazil-flag.png" },
-      { name: "Guyana", flag: "guyana-flag.png" },
-      { name: "Paraguay", flag: "paraguay-flag.png" },
-      { name: "Uruguay", flag: "uruguay-flag.png" }
-    ],
-    "Oceania": [
-      { name: "Australia", flag: "australia-flag.png" },
-      { name: "New Zealand", flag: "new-zealand-flag.png" },
-      { name: "Solomon Islands", flag: "solomon-islands-flag.png" }
-    ]
-  };
+        const img = document.createElement("img");
+        const imageFile = `${country.toLowerCase().replace(/ /g, "-")}-flag.jpg`;
+        img.src = imageFile;
+        img.onerror = () => img.src = "placeholder.png";
 
-  const container = document.getElementById("exploreContainer");
+        const name = document.createElement("span");
+        name.textContent = country;
 
-  for (const continent in countriesData) {
-    const contDiv = document.createElement("div");
-    contDiv.className = "continent";
-    contDiv.innerHTML = `<h2 onclick="toggleSection(this)">${continent}</h2><div class="countries"></div>`;
-    const countriesDiv = contDiv.querySelector(".countries");
-
-    countriesData[continent].forEach(country => {
-      const countryDiv = document.createElement("div");
-      countryDiv.className = "country-card";
-      countryDiv.innerHTML = `
-        <img src="${country.flag}" alt="${country.name} Flag">
-        <p>${country.name}</p>
-      `;
-      countriesDiv.appendChild(countryDiv);
-    });
-
-    container.appendChild(contDiv);
-  }
-
-  function toggleSection(el) {
-    const countriesList = el.nextElementSibling;
-    countriesList.style.display = countriesList.style.display === "flex" ? "none" : "flex";
-  }
-
-  function searchCountries() {
-    const input = document.getElementById("searchInput").value.toLowerCase();
-    document.querySelectorAll(".continent").forEach(continent => {
-      const cards = continent.querySelectorAll(".country-card");
-      let visible = 0;
-      cards.forEach(card => {
-        const match = card.innerText.toLowerCase().includes(input);
-        card.style.display = match ? "block" : "none";
-        if (match) visible++;
+        div.appendChild(img);
+        div.appendChild(name);
+        countryGrid.appendChild(div);
       });
-      continent.style.display = visible > 0 ? "block" : "none";
+
+      heading.addEventListener("click", () => {
+        countryGrid.style.display = countryGrid.style.display === "flex" ? "none" : "flex";
+      });
+
+      section.appendChild(heading);
+      section.appendChild(countryGrid);
+      container.appendChild(section);
+    }
+
+    document.getElementById("searchInput").addEventListener("keyup", function() {
+      const value = this.value.toLowerCase();
+      document.querySelectorAll(".country").forEach(el => {
+        el.style.display = el.innerText.toLowerCase().includes(value) ? "flex" : "none";
+      });
     });
-  }
-
-  window.onscroll = function () {
-    document.getElementById("topBtn").style.display = window.scrollY > 300 ? "block" : "none";
-  };
-
-  function scrollToTop() {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-</script>
-
-</body>
+  </script></body>
 </html>
