@@ -1,71 +1,124 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Explore Countries</title>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;600&display=swap" rel="stylesheet">
   <style>
-    body {
-      background-color: #0f0f0f;
-      color: #f2f2f2;
+    * {
+      box-sizing: border-box;
       font-family: 'Montserrat', sans-serif;
-      padding: 20px;
-    }
+    }body {
+  margin: 0;
+  background-color: #0f0f0f;
+  color: #f2f2f2;
+  padding: 20px;
+}
 
-    nav {
-      background-color: #1a1a1a;
-      padding: 15px 0;
-      text-align: center;
-      border-bottom: 1px solid #333;
-      margin-bottom: 30px;
-    }
+nav {
+  background-color: #1a1a1a;
+  padding: 15px 0;
+  text-align: center;
+  border-bottom: 1px solid #333;
+  margin-bottom: 30px;
+}
 
-    nav a {
-      color: #f5f5f5;
-      margin: 0 15px;
-      text-decoration: none;
-      font-weight: bold;
-    }
+nav a {
+  color: #f5f5f5;
+  margin: 0 15px;
+  text-decoration: none;
+  font-weight: bold;
+}
 
-    h1 {
-      text-align: center;
-      margin-bottom: 30px;
-      color: #ffffff;
-    }
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}
 
-    .continent {
-      margin-bottom: 40px;
-    }
+#search {
+  display: block;
+  margin: 0 auto 30px auto;
+  padding: 10px 15px;
+  width: 80%;
+  max-width: 500px;
+  border: none;
+  border-radius: 8px;
+}
 
-    .continent h2 {
-      font-size: 1.8rem;
-      margin-bottom: 15px;
-      border-bottom: 2px solid #444;
-      padding-bottom: 5px;
-      color: #ffffff;
-    }
+.continent {
+  margin-bottom: 30px;
+}
 
-    ul {
-      list-style: none;
-      padding-left: 0;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 15px;
-    }
+.continent h2 {
+  color: #ccc;
+  border-bottom: 1px solid #333;
+  padding-bottom: 5px;
+}
 
-    li {
-      background-color: #1a1a1a;
-      padding: 10px 20px;
-      border-radius: 8px;
-      color: #f2f2f2;
-      font-weight: 500;
-      transition: background 0.3s;
-    }
+.country-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
 
-    li:hover {
-      background-color: #333;
-    }
+.country {
+  background-color: #1c1c1c;
+  padding: 10px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  position: relative;
+  transition: background 0.3s;
+}
+
+.country:hover {
+  background-color: #333;
+}
+
+.country-flag {
+  position: absolute;
+  top: -60px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: none;
+  width: 60px;
+  border: 1px solid #fff;
+}
+
+.country:hover .country-flag {
+  display: block;
+}
+
+/* Popup modal */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.7);
+}
+
+.modal-content {
+  background-color: #222;
+  margin: 10% auto;
+  padding: 20px;
+  border: 1px solid #444;
+  width: 80%;
+  max-width: 400px;
+  border-radius: 10px;
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
   </style>
 </head>
 <body>
@@ -74,51 +127,81 @@
     <a href="explore.html">Explore</a>
     <a href="flags.html">Flags</a>
     <a href="lab.html">Lab</a>
-  </nav>
+  </nav>  <h1>Explore Countries</h1>
+  <input type="text" id="search" placeholder="Search for a country...">  <div id="explore-container"></div>  <!-- Modal -->  <div id="infoModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <div id="modalContent"></div>
+    </div>
+  </div>  <script>
+    const countries = {
+      "Africa": ["Algeria", "Egypt", "Ethiopia", "Libya", "Morocco", "Nigeria", "Tanzania", "Tunisia", "Zimbabwe"],
+      "Asia": ["Azerbaijan", "Bahrain", "China", "India", "Iran", "Japan", "Jordan", "Malaysia", "Mongolia", "Pakistan", "Palestine", "Saudi Arabia", "Sri Lanka", "Turkey", "Yemen"],
+      "Europe": ["Austria", "Bulgaria", "France", "Germany", "Greece", "Hungary", "Italy", "Monaco", "Macedonia", "Portugal", "Romania", "Russia", "San Marino", "Spain", "Switzerland", "Vetican City"],
+      "North America": ["Antigua and Barbuda", "Costa Rica", "El Salvador", "Saint Lucia", "USA"],
+      "South America": ["Argentina", "Brazil", "Guyana", "Paraguay", "Uruguay"],
+      "Oceania": ["Australia", "New Zealand", "Solomon Islands"],
+      "Southeast Asia": ["Vietnam"]
+    };
 
-  <h1>Explore Countries by Continent</h1>
+    const container = document.getElementById("explore-container");
 
-  <div class="continent">
-    <h2>Africa</h2>
-    <ul>
-      <li>Algeria</li><li>Egypt</li><li>Ethiopia</li><li>Libya</li><li>Morocco</li><li>Nigeria</li><li>Tanzania</li><li>Tunisia</li><li>Zimbabwe</li>
-    </ul>
-  </div>
+    function createCountryElement(name) {
+      const div = document.createElement("div");
+      div.className = "country";
+      div.innerHTML = `
+        <img class="country-flag" src="images/${name.replace(/ /g, '_')}.png" alt="${name} flag">
+        ${name}
+      `;
+      div.addEventListener("click", () => showModal(name));
+      return div;
+    }
 
-  <div class="continent">
-    <h2>Asia</h2>
-    <ul>
-      <li>Azerbaijan</li><li>Bahrain</li><li>China</li><li>India</li><li>Iran</li><li>Japan</li><li>Jordan</li><li>Malaysia</li><li>Mongolia</li><li>Pakistan</li><li>Palestine</li><li>Saudi Arabia</li><li>Sri Lanka</li><li>Turkey</li><li>Vietnam</li><li>Yemen</li>
-    </ul>
-  </div>
+    function renderCountries(filter = "") {
+      container.innerHTML = "";
+      for (const [continent, countryList] of Object.entries(countries)) {
+        const match = countryList.filter(name => name.toLowerCase().includes(filter.toLowerCase()));
+        if (match.length > 0) {
+          const section = document.createElement("div");
+          section.className = "continent";
 
-  <div class="continent">
-    <h2>Europe</h2>
-    <ul>
-      <li>Austria</li><li>Bulgaria</li><li>France</li><li>Germany</li><li>Greece</li><li>Hungary</li><li>Italy</li><li>Monaco</li><li>Macedonia</li><li>Portugal</li><li>Romania</li><li>Russia</li><li>San Marino</li><li>Spain</li><li>Switzerland</li><li>Vatican City</li>
-    </ul>
-  </div>
+          const title = document.createElement("h2");
+          title.textContent = continent;
+          section.appendChild(title);
 
-  <div class="continent">
-    <h2>North America</h2>
-    <ul>
-      <li>Antigua and Barbuda</li><li>Costa Rica</li><li>El Salvador</li><li>Saint Lucia</li><li>USA</li>
-    </ul>
-  </div>
+          const list = document.createElement("div");
+          list.className = "country-list";
+          match.forEach(name => list.appendChild(createCountryElement(name)));
 
-  <div class="continent">
-    <h2>South America</h2>
-    <ul>
-      <li>Argentina</li><li>Brazil</li><li>Guyana</li><li>Paraguay</li><li>Uruguay</li>
-    </ul>
-  </div>
+          section.appendChild(list);
+          container.appendChild(section);
+        }
+      }
+    }
 
-  <div class="continent">
-    <h2>Oceania</h2>
-    <ul>
-      <li>Australia</li><li>New Zealand</li><li>Solomon Islands</li>
-    </ul>
-  </div>
+    function showModal(name) {
+      document.getElementById("infoModal").style.display = "block";
+      document.getElementById("modalContent").innerHTML = `
+        <h2>${name}</h2>
+        <p>More information about ${name} will be added soon!</p>
+      `;
+    }
 
-</body>
+    function closeModal() {
+      document.getElementById("infoModal").style.display = "none";
+    }
+
+    document.getElementById("search").addEventListener("input", (e) => {
+      renderCountries(e.target.value);
+    });
+
+    window.onclick = function(event) {
+      const modal = document.getElementById("infoModal");
+      if (event.target == modal) {
+        modal.style.display = "none";
+      }
+    }
+
+    renderCountries();
+  </script></body>
 </html>
