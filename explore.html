@@ -1,210 +1,273 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Explore Countries</title>
-  <style>
-    /* Color theme */
-    :root {
-      --black: #121212;
-      --off-white: #f8f8f8;
-      --pure-white: #ffffff;
-      --grey-light: #bbbbbb;
-      --grey-dark: #444444;
-      --accent-color: #666666;
-    }
-    body {
-      margin: 0;
-      background-color: var(--black);
-      color: var(--off-white);
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      line-height: 1.6;
-    }
-    nav {
-      background-color: var(--grey-dark);
-      padding: 12px 0;
-      text-align: center;
-      border-bottom: 1px solid var(--grey-light);
-    }
-    nav a {
-      color: var(--off-white);
-      margin: 0 18px;
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 1.1rem;
-      transition: color 0.3s ease;
-    }
-    nav a:hover {
-      color: var(--pure-white);
-    }
-    header {
-      padding: 30px 20px 10px;
-      text-align: center;
-      font-size: 2.2rem;
-      font-weight: 700;
-      letter-spacing: 0.05em;
-      color: var(--pure-white);
-      user-select: none;
-    }
-    #searchInput {
-      display: block;
-      margin: 10px auto 30px;
-      padding: 10px 15px;
-      width: 80%;
-      max-width: 500px;
-      font-size: 1.1rem;
-      border: none;
-      border-radius: 8px;
-      background-color: var(--grey-dark);
-      color: var(--off-white);
-      box-shadow: inset 2px 2px 5px #000000aa;
-      outline: none;
-      transition: background-color 0.3s ease;
-    }
-    #searchInput::placeholder {
-      color: var(--grey-light);
-    }
-    #searchInput:focus {
-      background-color: var(--grey-light);
-      color: var(--black);
-    }
-    .continent-section {
-      max-width: 900px;
-      margin: 0 auto 35px;
-      border: 1px solid var(--grey-dark);
-      border-radius: 12px;
-      background-color: var(--grey-dark);
-      overflow: hidden;
-      box-shadow: 0 4px 8px #00000088;
-      user-select: none;
-    }
-    .continent-header {
-      background-color: var(--black);
-      color: var(--off-white);
-      padding: 14px 24px;
-      font-size: 1.5rem;
-      font-weight: 700;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      transition: background-color 0.3s ease;
-      border-radius: 12px 12px 0 0;
-    }
-    .continent-header:hover {
-      background-color: var(--grey-dark);
-      color: var(--pure-white);
-    }
-    .toggle-icon {
-      font-weight: 900;
-      font-size: 1.5rem;
-      transition: transform 0.3s ease;
-      user-select: none;
-    }
-    .continent-header.active .toggle-icon {
-      transform: rotate(90deg);
-    }
-    .country-list {
-      padding: 15px 40px 25px;
-      display: none;
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.4s ease;
-    }
-    .continent-section.active .country-list {
-      display: block;
-      max-height: 1000px; /* large enough to show all */
-    }
-    .country-item {
-      color: var(--off-white);
-      font-size: 1.12rem;
-      margin: 8px 0;
-      cursor: pointer;
-      padding: 8px 12px;
-      border-radius: 8px;
-      transition: background-color 0.3s ease, color 0.3s ease;
-      position: relative;
-    }
-    .country-item:hover {
-      background-color: var(--grey-light);
-      color: var(--black);
-    }
-    .country-item::after {
-      content: attr(data-continent);
-      position: absolute;
-      right: 12px;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: var(--accent-color);
-      opacity: 0.6;
-      user-select: none;
-    }
-    /* Responsive */
-    @media (max-width: 600px) {
-      .continent-header {
-        font-size: 1.3rem;
-        padding: 12px 18px;
-      }
-      .country-list {
-        padding: 15px 20px 20px;
-      }
-      .country-item {
-        font-size: 1rem;
-        margin: 6px 0;
-        padding: 6px 10px;
-      }
-      #searchInput {
-        width: 90%;
-      }
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Explore Countries</title>
+<style>
+  /* Base reset */
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    background-color: #121212;
+    color: #eee;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  a {
+    color: #ccc;
+    text-decoration: none;
+  }
+  a:hover, a:focus {
+    color: #fff;
+    outline: none;
+  }
+  header {
+    background: #1a1a1a;
+    padding: 20px 30px;
+    text-align: center;
+    border-bottom: 1px solid #333;
+  }
+  header h1 {
+    margin: 0;
+    font-weight: 700;
+    font-size: 2rem;
+  }
+  .search-container {
+    max-width: 500px;
+    margin: 20px auto;
+    padding: 0 15px;
+  }
+  #countrySearch {
+    width: 100%;
+    padding: 12px 15px;
+    border-radius: 25px;
+    border: 1.5px solid #555;
+    background-color: #222;
+    color: #eee;
+    font-size: 1rem;
+  }
+  #countrySearch::placeholder {
+    color: #999;
+  }
+  #countrySearch:focus {
+    border-color: #888;
+    outline: none;
+  }
+  .continent {
+    max-width: 700px;
+    margin: 0 auto 30px;
+    background: #1e1e1e;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.6);
+    overflow: hidden;
+  }
+  .continent-header {
+    background: #292929;
+    padding: 15px 25px;
+    cursor: pointer;
+    user-select: none;
+    font-size: 1.4rem;
+    font-weight: 700;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #333;
+    color: #ddd;
+  }
+  .continent-header:hover {
+    background: #3a3a3a;
+  }
+  .arrow {
+    font-size: 1.3rem;
+    color: #aaa;
+    transition: transform 0.3s ease;
+  }
+  .arrow.open {
+    transform: rotate(90deg);
+    color: #fff;
+  }
+  .country-list {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease;
+    background: #222;
+  }
+  .country-list.open {
+    max-height: 1000px;
+    transition: max-height 0.7s ease;
+  }
+  .country-item {
+    padding: 12px 30px;
+    border-bottom: 1px solid #333;
+    font-size: 1.1rem;
+    color: #ccc;
+    cursor: pointer;
+  }
+  .country-item:hover, .country-item:focus {
+    background: #3c3c3c;
+    color: #fff;
+    outline: none;
+  }
+  .no-results {
+    padding: 20px;
+    text-align: center;
+    font-style: italic;
+    color: #666;
+  }
+</style>
 </head>
 <body>
 
-<nav>
-  <a href="index.html">Home</a>
-  <a href="explore.html" style="color: var(--pure-white); font-weight: 700;">Explore</a>
-  <a href="flags.html">Flags</a>
-  <a href="lab.html">Lab</a>
-</nav>
+<header>
+  <h1>Explore Countries</h1>
+</header>
 
-<header>Explore Countries</header>
+<div class="search-container">
+  <input type="text" id="countrySearch" placeholder="Search countries..." aria-label="Search countries" />
+</div>
 
-<input type="text" id="searchInput" placeholder="Search countries..." aria-label="Search countries" />
+<div id="continentsContainer">
 
-<div id="container">
-
-  <!-- Continent Sections -->
-  <section class="continent-section" data-continent="Africa">
-    <div class="continent-header" tabindex="0">
-      Africa <span class="toggle-icon">&#9656;</span>
+  <section class="continent">
+    <div class="continent-header" tabindex="0" role="button" aria-expanded="false" aria-controls="africaList">
+      Africa
+      <span class="arrow">&#9654;</span>
     </div>
-    <div class="country-list">
-      <div class="country-item" data-continent="Africa" tabindex="0" onclick="openCountryPage('algeria')">Algeria</div>
-      <div class="country-item" data-continent="Africa" tabindex="0" onclick="openCountryPage('egypt')">Egypt</div>
-      <div class="country-item" data-continent="Africa" tabindex="0" onclick="openCountryPage('ethiopia')">Ethiopia</div>
-      <div class="country-item" data-continent="Africa" tabindex="0" onclick="openCountryPage('libya')">Libya</div>
-      <div class="country-item" data-continent="Africa" tabindex="0" onclick="openCountryPage('morocco')">Morocco</div>
-      <div class="country-item" data-continent="Africa" tabindex="0" onclick="openCountryPage('nigeria')">Nigeria</div>
-      <div class="country-item" data-continent="Africa" tabindex="0" onclick="openCountryPage('tanzania')">Tanzania</div>
-      <div class="country-item" data-continent="Africa" tabindex="0" onclick="openCountryPage('tunisia')">Tunisia</div>
-      <div class="country-item" data-continent="Africa" tabindex="0" onclick="openCountryPage('zimbabwe')">Zimbabwe</div>
+    <div class="country-list" id="africaList" role="region" aria-hidden="true">
+      <div class="country-item" tabindex="0">Algeria</div>
+      <div class="country-item" tabindex="0">Egypt</div>
+      <div class="country-item" tabindex="0">Ethiopia</div>
+      <div class="country-item" tabindex="0">Libya</div>
+      <div class="country-item" tabindex="0">Morocco</div>
+      <div class="country-item" tabindex="0">Nigeria</div>
+      <div class="country-item" tabindex="0">Tanzania</div>
+      <div class="country-item" tabindex="0">Tunisia</div>
+      <div class="country-item" tabindex="0">Zimbabwe</div>
     </div>
   </section>
 
-  <section class="continent-section" data-continent="Asia">
-    <div class="continent-header" tabindex="0">
-      Asia <span class="toggle-icon">&#9656;</span>
+  <section class="continent">
+    <div class="continent-header" tabindex="0" role="button" aria-expanded="false" aria-controls="asiaList">
+      Asia
+      <span class="arrow">&#9654;</span>
     </div>
-    <div class="country-list">
-      <div class="country-item" data-continent="Asia" tabindex="0" onclick="openCountryPage('azerbaijan')">Azerbaijan</div>
-      <div class="country-item" data-continent="Asia" tabindex="0" onclick="openCountryPage('bahrain')">Bahrain</div>
-      <div class="country-item" data-continent="Asia" tabindex="0" onclick="openCountryPage('china')">China</div>
-      <div class="country-item" data-continent="Asia" tabindex="0" onclick="openCountryPage('india')">India</div>
-      <div class="country-item" data-continent="Asia" tabindex="0" onclick="openCountryPage('iran')">Iran</div>
-      <div class="country-item" data-continent="Asia" tabindex="0" onclick="openCountryPage('japan')">Japan</div>
-      <div class="country-item" data-continent="Asia" tabindex="0" onclick="openCountryPage('jordan')">Jordan</div>
-      <div class="country-item" data-continent="Asia" tabindex="
+    <div class="country-list" id="asiaList" role="region" aria-hidden="true">
+      <div class="country-item" tabindex="0">Azerbaijan</div>
+      <div class="country-item" tabindex="0">Bahrain</div>
+      <div class="country-item" tabindex="0">China</div>
+      <div class="country-item" tabindex="0">India</div>
+      <div class="country-item" tabindex="0">Iran</div>
+      <div class="country-item" tabindex="0">Japan</div>
+      <div class="country-item" tabindex="0">Jordan</div>
+      <div class="country-item" tabindex="0">Malaysia</div>
+      <div class="country-item" tabindex="0">Mongolia</div>
+      <div class="country-item" tabindex="0">Pakistan</div>
+      <div class="country-item" tabindex="0">Palestine</div>
+      <div class="country-item" tabindex="0">Saudi Arabia</div>
+      <div class="country-item" tabindex="0">Sri Lanka</div>
+      <div class="country-item" tabindex="0">Turkey</div>
+      <div class="country-item" tabindex="0">Vietnam</div>
+      <div class="country-item" tabindex="0">Yemen</div>
+    </div>
+  </section>
+
+  <section class="continent">
+    <div class="continent-header" tabindex="0" role="button" aria-expanded="false" aria-controls="europeList">
+      Europe
+      <span class="arrow">&#9654;</span>
+    </div>
+    <div class="country-list" id="europeList" role="region" aria-hidden="true">
+      <div class="country-item" tabindex="0">Austria</div>
+      <div class="country-item" tabindex="0">Bulgaria</div>
+      <div class="country-item" tabindex="0">France</div>
+      <div class="country-item" tabindex="0">Germany</div>
+      <div class="country-item" tabindex="0">Greece</div>
+      <div class="country-item" tabindex="0">Hungary</div>
+      <div class="country-item" tabindex="0">Italy</div>
+      <div class="country-item" tabindex="0">Monaco</div>
+      <div class="country-item" tabindex="0">Macedonia</div>
+      <div class="country-item" tabindex="0">Portugal</div>
+      <div class="country-item" tabindex="0">Romania</div>
+      <div class="country-item" tabindex="0">Russia</div>
+      <div class="country-item" tabindex="0">San Marino</div>
+      <div class="country-item" tabindex="0">Spain</div>
+      <div class="country-item" tabindex="0">Switzerland</div>
+      <div class="country-item" tabindex="0">Vatican City</div>
+    </div>
+  </section>
+
+  <section class="continent">
+    <div class="continent-header" tabindex="0" role="button" aria-expanded="false" aria-controls="northAmericaList">
+      North America
+      <span class="arrow">&#9654;</span>
+    </div>
+    <div class="country-list" id="northAmericaList" role="region" aria-hidden="true">
+      <div class="country-item" tabindex="0">Antigua and Barbuda</div>
+      <div class="country-item" tabindex="0">Costa Rica</div>
+      <div class="country-item" tabindex="0">El Salvador</div>
+      <div class="country-item" tabindex="0">Saint Lucia</div>
+      <div class="country-item" tabindex="0">USA</div>
+    </div>
+  </section>
+
+  <section class="continent">
+    <div class="continent-header" tabindex="0" role="button" aria-expanded="false" aria-controls="southAmericaList">
+      South America
+      <span class="arrow">&#9654;</span>
+    </div>
+    <div class="country-list" id="southAmericaList" role="region" aria-hidden="true">
+      <div class="country-item" tabindex="0">Argentina</div>
+      <div class="country-item" tabindex="0">Brazil</div>
+      <div class="country-item" tabindex="0">Guyana</div>
+      <div class="country-item" tabindex="0">Paraguay</div>
+      <div class="country-item" tabindex="0">Uruguay</div>
+    </div>
+  </section>
+
+  <section class="continent">
+    <div class="continent-header" tabindex="0" role="button" aria-expanded="false" aria-controls="oceaniaList">
+      Oceania
+      <span class="arrow">&#9654;</span>
+    </div>
+    <div class="country-list" id="oceaniaList" role="region" aria-hidden="true">
+      <div class="country-item" tabindex="0">Australia</div>
+      <div class="country-item" tabindex="0">New Zealand</div>
+      <div class="country-item" tabindex="0">Solomon Islands</div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+  // Collapse functionality
+  document.querySelectorAll('.continent-header').forEach(header => {
+    header.addEventListener('click', () => {
+      const list = document.getElementById(header.getAttribute('aria-controls'));
+      const isOpen = list.classList.toggle('open');
+      header.setAttribute('aria-expanded', isOpen);
+      list.setAttribute('aria-hidden', !isOpen);
+      header.querySelector('.arrow').classList.toggle('open', isOpen);
+    });
+    header.addEventListener('keydown', e => {
+      if(e.key === 'Enter' || e.key === ' '){
+        e.preventDefault();
+        header.click();
+      }
+    });
+  });
+
+  // Search functionality
+  const searchInput = document.getElementById('countrySearch');
+  searchInput.addEventListener('input', () => {
+    const searchTerm = searchInput.value.toLowerCase();
+    const continents = document.querySelectorAll('.continent');
+
+    let anyMatch = false;
+
+    continents.forEach(continent => {
+      const countries = continent.querySelectorAll('.country-item');
+      let continentHasMatch = false;
+
+      countries.forEach
