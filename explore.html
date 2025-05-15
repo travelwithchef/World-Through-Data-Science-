@@ -2,173 +2,209 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Explore Countries</title>
   <style>
+    /* Color theme */
+    :root {
+      --black: #121212;
+      --off-white: #f8f8f8;
+      --pure-white: #ffffff;
+      --grey-light: #bbbbbb;
+      --grey-dark: #444444;
+      --accent-color: #666666;
+    }
     body {
       margin: 0;
-      font-family: 'Open Sans', sans-serif;
-      background-color: #0f0f0f;
-      color: #f5f5f5;
+      background-color: var(--black);
+      color: var(--off-white);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
     }
-
     nav {
-      background-color: #1a1a1a;
-      padding: 15px 0;
+      background-color: var(--grey-dark);
+      padding: 12px 0;
       text-align: center;
-      border-bottom: 1px solid #333;
+      border-bottom: 1px solid var(--grey-light);
     }
-
     nav a {
-      color: #f5f5f5;
-      margin: 0 15px;
+      color: var(--off-white);
+      margin: 0 18px;
       text-decoration: none;
-      font-weight: bold;
+      font-weight: 600;
+      font-size: 1.1rem;
+      transition: color 0.3s ease;
     }
-
-    h1 {
+    nav a:hover {
+      color: var(--pure-white);
+    }
+    header {
+      padding: 30px 20px 10px;
       text-align: center;
-      color: #ffffff;
-      margin-top: 20px;
+      font-size: 2.2rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      color: var(--pure-white);
+      user-select: none;
     }
-
-    .continent {
-      margin: 30px auto;
-      width: 90%;
-      max-width: 900px;
-      background-color: #1c1c1c;
-      border-radius: 8px;
-      padding: 20px;
-      border: 1px solid #333;
-    }
-
-    .continent h2 {
-      color: #ddd;
-      border-bottom: 1px solid #444;
-      padding-bottom: 10px;
-    }
-
-    .country-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 15px;
-      margin-top: 15px;
-    }
-
-    .country {
-      background-color: #2b2b2b;
+    #searchInput {
+      display: block;
+      margin: 10px auto 30px;
       padding: 10px 15px;
-      border-radius: 6px;
+      width: 80%;
+      max-width: 500px;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 8px;
+      background-color: var(--grey-dark);
+      color: var(--off-white);
+      box-shadow: inset 2px 2px 5px #000000aa;
+      outline: none;
+      transition: background-color 0.3s ease;
+    }
+    #searchInput::placeholder {
+      color: var(--grey-light);
+    }
+    #searchInput:focus {
+      background-color: var(--grey-light);
+      color: var(--black);
+    }
+    .continent-section {
+      max-width: 900px;
+      margin: 0 auto 35px;
+      border: 1px solid var(--grey-dark);
+      border-radius: 12px;
+      background-color: var(--grey-dark);
+      overflow: hidden;
+      box-shadow: 0 4px 8px #00000088;
+      user-select: none;
+    }
+    .continent-header {
+      background-color: var(--black);
+      color: var(--off-white);
+      padding: 14px 24px;
+      font-size: 1.5rem;
+      font-weight: 700;
       cursor: pointer;
-      color: #f0f0f0;
-      transition: background 0.3s;
-      text-decoration: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: background-color 0.3s ease;
+      border-radius: 12px 12px 0 0;
     }
-
-    .country:hover {
-      background-color: #444;
+    .continent-header:hover {
+      background-color: var(--grey-dark);
+      color: var(--pure-white);
     }
-
+    .toggle-icon {
+      font-weight: 900;
+      font-size: 1.5rem;
+      transition: transform 0.3s ease;
+      user-select: none;
+    }
+    .continent-header.active .toggle-icon {
+      transform: rotate(90deg);
+    }
+    .country-list {
+      padding: 15px 40px 25px;
+      display: none;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease;
+    }
+    .continent-section.active .country-list {
+      display: block;
+      max-height: 1000px; /* large enough to show all */
+    }
+    .country-item {
+      color: var(--off-white);
+      font-size: 1.12rem;
+      margin: 8px 0;
+      cursor: pointer;
+      padding: 8px 12px;
+      border-radius: 8px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      position: relative;
+    }
+    .country-item:hover {
+      background-color: var(--grey-light);
+      color: var(--black);
+    }
+    .country-item::after {
+      content: attr(data-continent);
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--accent-color);
+      opacity: 0.6;
+      user-select: none;
+    }
+    /* Responsive */
+    @media (max-width: 600px) {
+      .continent-header {
+        font-size: 1.3rem;
+        padding: 12px 18px;
+      }
+      .country-list {
+        padding: 15px 20px 20px;
+      }
+      .country-item {
+        font-size: 1rem;
+        margin: 6px 0;
+        padding: 6px 10px;
+      }
+      #searchInput {
+        width: 90%;
+      }
+    }
   </style>
 </head>
 <body>
-  <nav>
-    <a href="index.html">Home</a>
-    <a href="explore.html">Explore</a>
-    <a href="flags.html">Flags</a>
-    <a href="lab.html">Lab</a>
-  </nav>
 
-  <h1>Explore Countries by Continent</h1>
+<nav>
+  <a href="index.html">Home</a>
+  <a href="explore.html" style="color: var(--pure-white); font-weight: 700;">Explore</a>
+  <a href="flags.html">Flags</a>
+  <a href="lab.html">Lab</a>
+</nav>
 
-  <div class="continent">
-    <h2>Africa</h2>
-    <div class="country-list">
-      <a class="country" href="countries/algeria.html">Algeria</a>
-      <a class="country" href="countries/egypt.html">Egypt</a>
-      <a class="country" href="countries/ethiopia.html">Ethiopia</a>
-      <a class="country" href="countries/libya.html">Libya</a>
-      <a class="country" href="countries/morocco.html">Morocco</a>
-      <a class="country" href="countries/nigeria.html">Nigeria</a>
-      <a class="country" href="countries/tanzania.html">Tanzania</a>
-      <a class="country" href="countries/tunisia.html">Tunisia</a>
-      <a class="country" href="countries/zimbabwe.html">Zimbabwe</a>
+<header>Explore Countries</header>
+
+<input type="text" id="searchInput" placeholder="Search countries..." aria-label="Search countries" />
+
+<div id="container">
+
+  <!-- Continent Sections -->
+  <section class="continent-section" data-continent="Africa">
+    <div class="continent-header" tabindex="0">
+      Africa <span class="toggle-icon">&#9656;</span>
     </div>
-  </div>
-
-  <div class="continent">
-    <h2>Asia</h2>
     <div class="country-list">
-      <a class="country" href="countries/azerbaijan.html">Azerbaijan</a>
-      <a class="country" href="countries/bahrain.html">Bahrain</a>
-      <a class="country" href="countries/china.html">China</a>
-      <a class="country" href="countries/india.html">India</a>
-      <a class="country" href="countries/iran.html">Iran</a>
-      <a class="country" href="countries/japan.html">Japan</a>
-      <a class="country" href="countries/jordan.html">Jordan</a>
-      <a class="country" href="countries/malaysia.html">Malaysia</a>
-      <a class="country" href="countries/mongolia.html">Mongolia</a>
-      <a class="country" href="countries/pakistan.html">Pakistan</a>
-      <a class="country" href="countries/palestine.html">Palestine</a>
-      <a class="country" href="countries/saudi-arabia.html">Saudi Arabia</a>
-      <a class="country" href="countries/sri-lanka.html">Sri Lanka</a>
-      <a class="country" href="countries/turkey.html">Turkey</a>
-      <a class="country" href="countries/yemen.html">Yemen</a>
+      <div class="country-item" data-continent="Africa" tabindex="0" onclick="openCountryPage('algeria')">Algeria</div>
+      <div class="country-item" data-continent="Africa" tabindex="0" onclick="openCountryPage('egypt')">Egypt</div>
+      <div class="country-item" data-continent="Africa" tabindex="0" onclick="openCountryPage('ethiopia')">Ethiopia</div>
+      <div class="country-item" data-continent="Africa" tabindex="0" onclick="openCountryPage('libya')">Libya</div>
+      <div class="country-item" data-continent="Africa" tabindex="0" onclick="openCountryPage('morocco')">Morocco</div>
+      <div class="country-item" data-continent="Africa" tabindex="0" onclick="openCountryPage('nigeria')">Nigeria</div>
+      <div class="country-item" data-continent="Africa" tabindex="0" onclick="openCountryPage('tanzania')">Tanzania</div>
+      <div class="country-item" data-continent="Africa" tabindex="0" onclick="openCountryPage('tunisia')">Tunisia</div>
+      <div class="country-item" data-continent="Africa" tabindex="0" onclick="openCountryPage('zimbabwe')">Zimbabwe</div>
     </div>
-  </div>
+  </section>
 
-  <div class="continent">
-    <h2>Europe</h2>
-    <div class="country-list">
-      <a class="country" href="countries/austria.html">Austria</a>
-      <a class="country" href="countries/bulgaria.html">Bulgaria</a>
-      <a class="country" href="countries/france.html">France</a>
-      <a class="country" href="countries/germany.html">Germany</a>
-      <a class="country" href="countries/greece.html">Greece</a>
-      <a class="country" href="countries/hungary.html">Hungary</a>
-      <a class="country" href="countries/italy.html">Italy</a>
-      <a class="country" href="countries/monaco.html">Monaco</a>
-      <a class="country" href="countries/macedonia.html">Macedonia</a>
-      <a class="country" href="countries/portugal.html">Portugal</a>
-      <a class="country" href="countries/romania.html">Romania</a>
-      <a class="country" href="countries/russia.html">Russia</a>
-      <a class="country" href="countries/san-marino.html">San Marino</a>
-      <a class="country" href="countries/spain.html">Spain</a>
-      <a class="country" href="countries/switzerland.html">Switzerland</a>
-      <a class="country" href="countries/vetican-city.html">Vatican City</a>
+  <section class="continent-section" data-continent="Asia">
+    <div class="continent-header" tabindex="0">
+      Asia <span class="toggle-icon">&#9656;</span>
     </div>
-  </div>
-
-  <div class="continent">
-    <h2>North America</h2>
     <div class="country-list">
-      <a class="country" href="countries/antigua-and-barbuda.html">Antigua and Barbuda</a>
-      <a class="country" href="countries/costa-rica.html">Costa Rica</a>
-      <a class="country" href="countries/el-salvador.html">El Salvador</a>
-      <a class="country" href="countries/saint-lucia.html">Saint Lucia</a>
-      <a class="country" href="countries/usa.html">USA</a>
-    </div>
-  </div>
-
-  <div class="continent">
-    <h2>South America</h2>
-    <div class="country-list">
-      <a class="country" href="countries/argentina.html">Argentina</a>
-      <a class="country" href="countries/brazil.html">Brazil</a>
-      <a class="country" href="countries/guyana.html">Guyana</a>
-      <a class="country" href="countries/paraguay.html">Paraguay</a>
-      <a class="country" href="countries/uruguay.html">Uruguay</a>
-      <a class="country" href="countries/vietnam.html">Vietnam</a>
-    </div>
-  </div>
-
-  <div class="continent">
-    <h2>Oceania</h2>
-    <div class="country-list">
-      <a class="country" href="countries/australia.html">Australia</a>
-      <a class="country" href="countries/new-zealand.html">New Zealand</a>
-      <a class="country" href="countries/solomon-islands.html">Solomon Islands</a>
-    </div>
-  </div>
-</body>
-</html>
+      <div class="country-item" data-continent="Asia" tabindex="0" onclick="openCountryPage('azerbaijan')">Azerbaijan</div>
+      <div class="country-item" data-continent="Asia" tabindex="0" onclick="openCountryPage('bahrain')">Bahrain</div>
+      <div class="country-item" data-continent="Asia" tabindex="0" onclick="openCountryPage('china')">China</div>
+      <div class="country-item" data-continent="Asia" tabindex="0" onclick="openCountryPage('india')">India</div>
+      <div class="country-item" data-continent="Asia" tabindex="0" onclick="openCountryPage('iran')">Iran</div>
+      <div class="country-item" data-continent="Asia" tabindex="0" onclick="openCountryPage('japan')">Japan</div>
+      <div class="country-item" data-continent="Asia" tabindex="0" onclick="openCountryPage('jordan')">Jordan</div>
+      <div class="country-item" data-continent="Asia" tabindex="
