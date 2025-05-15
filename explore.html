@@ -1,182 +1,174 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Explore Countries</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
   <style>
-    * {
-      box-sizing: border-box;
+    body {
       margin: 0;
-      padding: 0;
-      font-family: 'Poppins', sans-serif;
-    }body {
-  background-color: #111;
-  color: #fff;
-  padding: 20px;
-}
+      font-family: 'Open Sans', sans-serif;
+      background-color: #0f0f0f;
+      color: #f5f5f5;
+    }
 
-h1 {
-  text-align: center;
-  margin-bottom: 20px;
-  font-size: 2rem;
-}
+    nav {
+      background-color: #1a1a1a;
+      padding: 15px 0;
+      text-align: center;
+      border-bottom: 1px solid #333;
+    }
 
-.search-box {
-  width: 100%;
-  max-width: 500px;
-  margin: 0 auto 40px;
-}
+    nav a {
+      color: #f5f5f5;
+      margin: 0 15px;
+      text-decoration: none;
+      font-weight: bold;
+    }
 
-.search-box input {
-  width: 100%;
-  padding: 12px 20px;
-  border: none;
-  border-radius: 8px;
-  font-size: 1rem;
-  background-color: #222;
-  color: #fff;
-  box-shadow: 0 0 8px rgba(255,255,255,0.1);
-}
+    h1 {
+      text-align: center;
+      color: #ffffff;
+      margin-top: 20px;
+    }
 
-.continent {
-  margin-bottom: 30px;
-  background: #1a1a1a;
-  padding: 20px;
-  border-radius: 10px;
-}
+    .continent {
+      margin: 30px auto;
+      width: 90%;
+      max-width: 900px;
+      background-color: #1c1c1c;
+      border-radius: 8px;
+      padding: 20px;
+      border: 1px solid #333;
+    }
 
-.continent h2 {
-  font-size: 1.5rem;
-  cursor: pointer;
-  user-select: none;
-  margin-bottom: 10px;
-}
+    .continent h2 {
+      color: #ddd;
+      border-bottom: 1px solid #444;
+      padding-bottom: 10px;
+    }
 
-.country-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 20px;
-  display: none;
-}
+    .country-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-top: 15px;
+    }
 
-.country {
-  background-color: #2a2a2a;
-  border-radius: 10px;
-  overflow: hidden;
-  text-align: center;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  cursor: pointer;
-  position: relative;
-}
+    .country {
+      background-color: #2b2b2b;
+      padding: 10px 15px;
+      border-radius: 6px;
+      cursor: pointer;
+      color: #f0f0f0;
+      transition: background 0.3s;
+      text-decoration: none;
+    }
 
-.country:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 15px rgba(255,255,255,0.15);
-}
-
-.country img {
-  width: 100%;
-  height: 100px;
-  object-fit: cover;
-}
-
-.country span {
-  display: block;
-  padding: 10px;
-  font-size: 1rem;
-  color: #fff;
-}
-
-.tooltip {
-  position: absolute;
-  bottom: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(0, 0, 0, 0.6);
-  padding: 5px 10px;
-  border-radius: 5px;
-  font-size: 0.8rem;
-  color: #fff;
-  display: none;
-}
-
-.country:hover .tooltip {
-  display: block;
-}
+    .country:hover {
+      background-color: #444;
+    }
 
   </style>
 </head>
 <body>
-  <h1>Explore Countries</h1>  <div class="search-box">
-    <input type="text" id="search" placeholder="Search countries...">
-  </div>  <div id="explore-container"></div>  <script>
-    const data = {
-      "Africa": ["Algeria", "Egypt", "Ethiopia", "Libya", "Morocco", "Nigeria", "Tanzania", "Tunisia", "Zimbabwe"],
-      "Asia": ["Azerbaijan", "Bahrain", "China", "India", "Iran", "Japan", "Jordan", "Malaysia", "Mongolia", "Pakistan", "Palestine", "Saudi Arabia", "Sri Lanka", "Turkey", "Yemen", "Vietnam"],
-      "Europe": ["Austria", "Bulgaria", "France", "Germany", "Greece", "Hungary", "Italy", "Monaco", "Macedonia", "Portugal", "Romania", "Russia", "San Marino", "Spain", "Switzerland", "Vetican City"],
-      "North America": ["Antigua and Barbuda", "Costa Rica", "El Salvador", "Saint Lucia", "USA"],
-      "South America": ["Argentina", "Brazil", "Guyana", "Paraguay", "Uruguay"],
-      "Oceania": ["Australia", "New Zealand", "Solomon Islands"]
-    };
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="explore.html">Explore</a>
+    <a href="flags.html">Flags</a>
+    <a href="lab.html">Lab</a>
+  </nav>
 
-    const container = document.getElementById('explore-container');
+  <h1>Explore Countries by Continent</h1>
 
-    for (let continent in data) {
-      const section = document.createElement('div');
-      section.className = 'continent';
+  <div class="continent">
+    <h2>Africa</h2>
+    <div class="country-list">
+      <a class="country" href="countries/algeria.html">Algeria</a>
+      <a class="country" href="countries/egypt.html">Egypt</a>
+      <a class="country" href="countries/ethiopia.html">Ethiopia</a>
+      <a class="country" href="countries/libya.html">Libya</a>
+      <a class="country" href="countries/morocco.html">Morocco</a>
+      <a class="country" href="countries/nigeria.html">Nigeria</a>
+      <a class="country" href="countries/tanzania.html">Tanzania</a>
+      <a class="country" href="countries/tunisia.html">Tunisia</a>
+      <a class="country" href="countries/zimbabwe.html">Zimbabwe</a>
+    </div>
+  </div>
 
-      const title = document.createElement('h2');
-      title.textContent = continent;
-      title.onclick = () => {
-        grid.style.display = grid.style.display === 'grid' ? 'none' : 'grid';
-      };
+  <div class="continent">
+    <h2>Asia</h2>
+    <div class="country-list">
+      <a class="country" href="countries/azerbaijan.html">Azerbaijan</a>
+      <a class="country" href="countries/bahrain.html">Bahrain</a>
+      <a class="country" href="countries/china.html">China</a>
+      <a class="country" href="countries/india.html">India</a>
+      <a class="country" href="countries/iran.html">Iran</a>
+      <a class="country" href="countries/japan.html">Japan</a>
+      <a class="country" href="countries/jordan.html">Jordan</a>
+      <a class="country" href="countries/malaysia.html">Malaysia</a>
+      <a class="country" href="countries/mongolia.html">Mongolia</a>
+      <a class="country" href="countries/pakistan.html">Pakistan</a>
+      <a class="country" href="countries/palestine.html">Palestine</a>
+      <a class="country" href="countries/saudi-arabia.html">Saudi Arabia</a>
+      <a class="country" href="countries/sri-lanka.html">Sri Lanka</a>
+      <a class="country" href="countries/turkey.html">Turkey</a>
+      <a class="country" href="countries/yemen.html">Yemen</a>
+    </div>
+  </div>
 
-      const grid = document.createElement('div');
-      grid.className = 'country-grid';
+  <div class="continent">
+    <h2>Europe</h2>
+    <div class="country-list">
+      <a class="country" href="countries/austria.html">Austria</a>
+      <a class="country" href="countries/bulgaria.html">Bulgaria</a>
+      <a class="country" href="countries/france.html">France</a>
+      <a class="country" href="countries/germany.html">Germany</a>
+      <a class="country" href="countries/greece.html">Greece</a>
+      <a class="country" href="countries/hungary.html">Hungary</a>
+      <a class="country" href="countries/italy.html">Italy</a>
+      <a class="country" href="countries/monaco.html">Monaco</a>
+      <a class="country" href="countries/macedonia.html">Macedonia</a>
+      <a class="country" href="countries/portugal.html">Portugal</a>
+      <a class="country" href="countries/romania.html">Romania</a>
+      <a class="country" href="countries/russia.html">Russia</a>
+      <a class="country" href="countries/san-marino.html">San Marino</a>
+      <a class="country" href="countries/spain.html">Spain</a>
+      <a class="country" href="countries/switzerland.html">Switzerland</a>
+      <a class="country" href="countries/vetican-city.html">Vatican City</a>
+    </div>
+  </div>
 
-      data[continent].forEach(country => {
-        const item = document.createElement('div');
-        item.className = 'country';
+  <div class="continent">
+    <h2>North America</h2>
+    <div class="country-list">
+      <a class="country" href="countries/antigua-and-barbuda.html">Antigua and Barbuda</a>
+      <a class="country" href="countries/costa-rica.html">Costa Rica</a>
+      <a class="country" href="countries/el-salvador.html">El Salvador</a>
+      <a class="country" href="countries/saint-lucia.html">Saint Lucia</a>
+      <a class="country" href="countries/usa.html">USA</a>
+    </div>
+  </div>
 
-        const img = document.createElement('img');
-        const flagName = country.toLowerCase().replace(/ /g, '-').replace(/[^a-z\-]/g, '') + '-flag';
-        const ext = ["png", "jpg", "jpeg"];
-        let found = false;
+  <div class="continent">
+    <h2>South America</h2>
+    <div class="country-list">
+      <a class="country" href="countries/argentina.html">Argentina</a>
+      <a class="country" href="countries/brazil.html">Brazil</a>
+      <a class="country" href="countries/guyana.html">Guyana</a>
+      <a class="country" href="countries/paraguay.html">Paraguay</a>
+      <a class="country" href="countries/uruguay.html">Uruguay</a>
+      <a class="country" href="countries/vietnam.html">Vietnam</a>
+    </div>
+  </div>
 
-        for (let e of ext) {
-          img.src = `${flagName}.${e}`;
-          img.onerror = () => {
-            if (!found) img.src = "fallback.png";
-          };
-          img.onload = () => found = true;
-          break;
-        }
-
-        const name = document.createElement('span');
-        name.textContent = country;
-
-        const tip = document.createElement('div');
-        tip.className = 'tooltip';
-        tip.textContent = `Click to explore ${country}`;
-
-        item.appendChild(img);
-        item.appendChild(name);
-        item.appendChild(tip);
-        grid.appendChild(item);
-      });
-
-      section.appendChild(title);
-      section.appendChild(grid);
-      container.appendChild(section);
-    }
-
-    document.getElementById('search').addEventListener('input', function () {
-      const term = this.value.toLowerCase();
-      document.querySelectorAll('.country').forEach(c => {
-        const name = c.querySelector('span').textContent.toLowerCase();
-        c.style.display = name.includes(term) ? 'block' : 'none';
-      });
-    });
-  </script></body>
+  <div class="continent">
+    <h2>Oceania</h2>
+    <div class="country-list">
+      <a class="country" href="countries/australia.html">Australia</a>
+      <a class="country" href="countries/new-zealand.html">New Zealand</a>
+      <a class="country" href="countries/solomon-islands.html">Solomon Islands</a>
+    </div>
+  </div>
+</body>
 </html>
