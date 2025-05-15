@@ -2,154 +2,273 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Explore Countries</title>
   <style>
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
-      background-color: #111;
-      color: #fff;
+      font-family: 'Segoe UI', sans-serif;
+      background: radial-gradient(#1a1a1a, #000000);
+      color: #f5f5f5;
+      overflow-x: hidden;
     }
+
     nav {
-      background-color: #1a1a1a;
+      background-color: #111;
       padding: 15px 0;
       text-align: center;
       border-bottom: 1px solid #333;
     }
+
     nav a {
       color: #f5f5f5;
       margin: 0 15px;
       text-decoration: none;
       font-weight: bold;
+      transition: 0.3s;
     }
+
+    nav a:hover {
+      color: #00ffff;
+    }
+
+    .search-bar {
+      text-align: center;
+      margin: 20px auto;
+    }
+
+    .search-bar input {
+      padding: 10px 20px;
+      border-radius: 25px;
+      border: none;
+      width: 60%;
+      max-width: 500px;
+      font-size: 16px;
+      outline: none;
+      box-shadow: 0 0 10px #00ffff44;
+    }
+
     .continent {
       margin: 30px;
     }
+
     .continent h2 {
+      text-align: left;
+      font-size: 28px;
+      margin-bottom: 15px;
+      border-left: 5px solid #00ffff;
+      padding-left: 10px;
       cursor: pointer;
-      background-color: #222;
-      padding: 10px;
-      border-left: 5px solid #555;
     }
+
     .countries {
-      display: none;
+      display: flex;
       flex-wrap: wrap;
       gap: 20px;
-      margin-top: 15px;
-    }
-    .country {
-      width: 120px;
-      text-align: center;
-      position: relative;
-      cursor: pointer;
-    }
-    .country img {
-      width: 100%;
-      height: auto;
-      border: 2px solid #444;
-      border-radius: 8px;
-      transition: transform 0.3s, border-color 0.3s;
-    }
-    .country:hover img {
-      transform: scale(1.05);
-      border-color: #09f;
-    }
-    .country-name {
-      margin-top: 8px;
-      font-size: 14px;
-      color: #ddd;
-    }
-    .tooltip {
-      position: absolute;
-      bottom: 100%;
-      background-color: #222;
-      padding: 5px 10px;
-      font-size: 12px;
-      border-radius: 4px;
-      white-space: nowrap;
-      transform: translateX(-50%);
-      left: 50%;
+      justify-content: flex-start;
+      padding-left: 10px;
       display: none;
-      color: #fff;
     }
-    .country:hover .tooltip {
-      display: block;
+
+    .country-card {
+      width: 140px;
+      height: 170px;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(12px);
+      border-radius: 15px;
+      text-align: center;
+      padding: 15px 10px;
+      box-shadow: 0 0 10px #00ffff44;
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+    }
+
+    .country-card:hover {
+      transform: rotateY(10deg) scale(1.05);
+      box-shadow: 0 0 20px #00ffffaa;
+    }
+
+    .country-card img {
+      width: 60px;
+      height: auto;
+      margin-bottom: 10px;
+    }
+
+    .back-to-top {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: #00ffff;
+      color: #000;
+      padding: 12px 18px;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      font-weight: bold;
+      box-shadow: 0 0 10px #00ffffaa;
+      display: none;
+    }
+
+    .particles {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      background: url('https://www.transparenttextures.com/patterns/stardust.png') repeat;
+      opacity: 0.03;
+    }
+
+    @media (max-width: 600px) {
+      .country-card {
+        width: 100px;
+        height: 140px;
+      }
+
+      .search-bar input {
+        width: 90%;
+      }
     }
   </style>
 </head>
 <body>
 
-  <nav>
-    <a href="index.html">Home</a>
-    <a href="explore.html">Explore</a>
-    <a href="flags.html">Flags</a>
-    <a href="lab.html">Lab</a>
-  </nav>
+<div class="particles"></div>
 
-  <div id="explore-container"></div>
+<nav>
+  <a href="index.html">Home</a>
+  <a href="explore.html">Explore</a>
+  <a href="flags.html">Flags</a>
+  <a href="lab.html">Lab</a>
+</nav>
 
-  <script>
-    const data = {
-      "Africa": ["algeria", "egypt", "ethiopia", "libya", "morocco", "nigeria", "tanzania", "tunisia", "zimbabwe"],
-      "Asia": ["azerbaijan", "bahrain", "china", "india", "iran", "japan", "jordan", "malaysia", "mongolia", "pakistan", "palestine", "saudi-arabia", "sri-lanka", "turkey", "vietnam", "yemen"],
-      "Europe": ["austria", "bulgaria", "france", "germany", "greece", "hungary", "italy", "monaco", "macedonia", "portugal", "romania", "russia", "san-marino", "spain", "switzerland", "vetican-city"],
-      "North America": ["antigua-and-barbuda", "costa-rica", "el-salvador", "saint-lucia", "usa"],
-      "South America": ["argentina", "brazil", "guyana", "paraguay", "uruguay"],
-      "Oceania": ["australia", "new-zealand", "solomon-islands"]
-    };
+<div class="search-bar">
+  <input type="text" id="searchInput" placeholder="Search for a country..." onkeyup="searchCountries()" />
+</div>
 
-    const pngList = [
-      "sri-lanka", "turkey", "austria", "bulgaria", "france", "germany", "greece", "hungary", "italy", "monaco",
-      "macedonia", "portugal", "romania", "russia", "san-marino", "spain", "switzerland", "vetican-city",
-      "antigua-and-barbuda", "costa-rica", "el-salvador", "saint-lucia", "usa", "argentina", "brazil", "guyana",
-      "paraguay", "uruguay", "australia", "new-zealand", "solomon-islands"
-    ];
+<div id="exploreContainer">
+  <!-- Content will be injected here -->
+</div>
 
-    const container = document.getElementById("explore-container");
+<button onclick="scrollToTop()" class="back-to-top" id="topBtn">↑ Top</button>
 
-    for (let continent in data) {
-      const section = document.createElement("div");
-      section.classList.add("continent");
+<script>
+  const countriesData = {
+    "Africa": [
+      { name: "Algeria", flag: "algeria-flag.jpg" },
+      { name: "Egypt", flag: "egypt-flag.jpg" },
+      { name: "Ethiopia", flag: "ethiopia-flag.jpg" },
+      { name: "Libya", flag: "libya-flag.jpg" },
+      { name: "Morocco", flag: "morocco-flag.jpg" },
+      { name: "Nigeria", flag: "nigeria-flag.jpg" },
+      { name: "Tanzania", flag: "tanzania-flag.jpg" },
+      { name: "Tunisia", flag: "tunisia-flag.jpg" },
+      { name: "Zimbabwe", flag: "zimbabwe-flag.jpg" }
+    ],
+    "Asia": [
+      { name: "Azerbaijan", flag: "azerbaijan-flag.jpg" },
+      { name: "Bahrain", flag: "bahrain-flag.jpg" },
+      { name: "China", flag: "china-flag.jpg" },
+      { name: "India", flag: "india-flag.jpg" },
+      { name: "Iran", flag: "iran-flag.jpg" },
+      { name: "Japan", flag: "japan-flag.jpg" },
+      { name: "Jordan", flag: "jordan-flag.jpg" },
+      { name: "Malaysia", flag: "malaysia-flag.jpg" },
+      { name: "Mongolia", flag: "mongolia-flag.jpg" },
+      { name: "Pakistan", flag: "pakistan-flag.jpg" },
+      { name: "Palestine", flag: "palestine-flag.jpg" },
+      { name: "Saudi Arabia", flag: "saudi-arabia-flag.jpg" },
+      { name: "Sri Lanka", flag: "sri-lanka-flag.png" },
+      { name: "Turkey", flag: "turkey-flag.png" },
+      { name: "Vietnam", flag: "vietnam-flag.jpg" },
+      { name: "Yemen", flag: "yemen-flag.jpg" }
+    ],
+    "Europe": [
+      { name: "Austria", flag: "austria-flag.png" },
+      { name: "Bulgaria", flag: "bulgaria-flag.png" },
+      { name: "France", flag: "france-flag.png" },
+      { name: "Germany", flag: "germany-flag.png" },
+      { name: "Greece", flag: "greece-flag.png" },
+      { name: "Hungary", flag: "hungary-flag.png" },
+      { name: "Italy", flag: "italy-flag.png" },
+      { name: "Monaco", flag: "monaco-flag.png" },
+      { name: "Macedonia", flag: "macedonia-flag.png" },
+      { name: "Portugal", flag: "portugal-flag.png" },
+      { name: "Romania", flag: "romania-flag.png" },
+      { name: "Russia", flag: "russia-flag.png" },
+      { name: "San Marino", flag: "san-marino-flag.png" },
+      { name: "Spain", flag: "spain-flag.png" },
+      { name: "Switzerland", flag: "switzerland-flag.png" },
+      { name: "Vetican City", flag: "vetican-city-flag.png" }
+    ],
+    "North America": [
+      { name: "Antigua and Barbuda", flag: "antigua-and-barbuda-flag.png" },
+      { name: "Costa Rica", flag: "costa-rica-flag.png" },
+      { name: "El Salvador", flag: "el-salvador-flag.png" },
+      { name: "Saint Lucia", flag: "saint-lucia-flag.png" },
+      { name: "USA", flag: "usa-flag.png" }
+    ],
+    "South America": [
+      { name: "Argentina", flag: "argentina-flag.png" },
+      { name: "Brazil", flag: "brazil-flag.png" },
+      { name: "Guyana", flag: "guyana-flag.png" },
+      { name: "Paraguay", flag: "paraguay-flag.png" },
+      { name: "Uruguay", flag: "uruguay-flag.png" }
+    ],
+    "Oceania": [
+      { name: "Australia", flag: "australia-flag.png" },
+      { name: "New Zealand", flag: "new-zealand-flag.png" },
+      { name: "Solomon Islands", flag: "solomon-islands-flag.png" }
+    ]
+  };
 
-      const heading = document.createElement("h2");
-      heading.textContent = continent;
-      heading.onclick = () => {
-        const block = section.querySelector(".countries");
-        block.style.display = block.style.display === "flex" ? "none" : "flex";
-      };
+  const container = document.getElementById("exploreContainer");
 
-      const countriesDiv = document.createElement("div");
-      countriesDiv.classList.add("countries");
+  for (const continent in countriesData) {
+    const contDiv = document.createElement("div");
+    contDiv.className = "continent";
+    contDiv.innerHTML = `<h2 onclick="toggleSection(this)">${continent}</h2><div class="countries"></div>`;
+    const countriesDiv = contDiv.querySelector(".countries");
 
-      data[continent].forEach(name => {
-        const countryDiv = document.createElement("div");
-        countryDiv.classList.add("country");
+    countriesData[continent].forEach(country => {
+      const countryDiv = document.createElement("div");
+      countryDiv.className = "country-card";
+      countryDiv.innerHTML = `
+        <img src="${country.flag}" alt="${country.name} Flag">
+        <p>${country.name}</p>
+      `;
+      countriesDiv.appendChild(countryDiv);
+    });
 
-        const ext = pngList.includes(name) ? 'png' : 'jpg';
-        const img = document.createElement("img");
-        img.src = `${name}-flag.${ext}`;
-        img.alt = `${name} flag`;
+    container.appendChild(contDiv);
+  }
 
-        const tooltip = document.createElement("div");
-        tooltip.className = "tooltip";
-        tooltip.textContent = `Click to explore ${name.replace(/-/g, ' ').toUpperCase()}`;
+  function toggleSection(el) {
+    const countriesList = el.nextElementSibling;
+    countriesList.style.display = countriesList.style.display === "flex" ? "none" : "flex";
+  }
 
-        const nameLabel = document.createElement("div");
-        nameLabel.className = "country-name";
-        nameLabel.textContent = name.replace(/-/g, ' ').toUpperCase();
-
-        countryDiv.appendChild(img);
-        countryDiv.appendChild(tooltip);
-        countryDiv.appendChild(nameLabel);
-        countriesDiv.appendChild(countryDiv);
+  function searchCountries() {
+    const input = document.getElementById("searchInput").value.toLowerCase();
+    document.querySelectorAll(".continent").forEach(continent => {
+      const cards = continent.querySelectorAll(".country-card");
+      let visible = 0;
+      cards.forEach(card => {
+        const match = card.innerText.toLowerCase().includes(input);
+        card.style.display = match ? "block" : "none";
+        if (match) visible++;
       });
+      continent.style.display = visible > 0 ? "block" : "none";
+    });
+  }
 
-      section.appendChild(heading);
-      section.appendChild(countriesDiv);
-      container.appendChild(section);
-    }
-  </script>
+  window.onscroll = function () {
+    document.getElementById("topBtn").style.display = window.scrollY > 300 ? "block" : "none";
+  };
+
+  function scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
 
 </body>
 </html>
