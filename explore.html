@@ -1,207 +1,213 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Explore Countries</title>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;600&display=swap" rel="stylesheet">
   <style>
     * {
-      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
       font-family: 'Montserrat', sans-serif;
-    }body {
-  margin: 0;
-  background-color: #0f0f0f;
-  color: #f2f2f2;
-  padding: 20px;
-}
+      box-sizing: border-box;
+    }
 
-nav {
-  background-color: #1a1a1a;
-  padding: 15px 0;
-  text-align: center;
-  border-bottom: 1px solid #333;
-  margin-bottom: 30px;
-}
+    body {
+      background-color: #0f0f0f;
+      color: #f2f2f2;
+      padding: 40px 20px;
+      min-height: 100vh;
+    }
 
-nav a {
-  color: #f5f5f5;
-  margin: 0 15px;
-  text-decoration: none;
-  font-weight: bold;
-}
+    nav {
+      background-color: #1a1a1a;
+      padding: 15px 0;
+      text-align: center;
+      border-bottom: 1px solid #333;
+      margin-bottom: 30px;
+    }
 
-h1 {
-  text-align: center;
-  margin-bottom: 20px;
-}
+    nav a {
+      color: #f5f5f5;
+      margin: 0 15px;
+      text-decoration: none;
+      font-weight: bold;
+    }
 
-#search {
-  display: block;
-  margin: 0 auto 30px auto;
-  padding: 10px 15px;
-  width: 80%;
-  max-width: 500px;
-  border: none;
-  border-radius: 8px;
-}
+    h1 {
+      text-align: center;
+      margin-bottom: 40px;
+      font-size: 2.4rem;
+    }
 
-.continent {
-  margin-bottom: 30px;
-}
+    .continent {
+      margin-bottom: 20px;
+      border: 1px solid #444;
+      border-radius: 8px;
+      overflow: hidden;
+    }
 
-.continent h2 {
-  color: #ccc;
-  border-bottom: 1px solid #333;
-  padding-bottom: 5px;
-}
+    .continent-header {
+      background-color: #1a1a1a;
+      padding: 12px 20px;
+      cursor: pointer;
+      font-size: 1.3rem;
+      font-weight: 600;
+      transition: background 0.3s;
+    }
 
-.country-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-}
+    .continent-header:hover {
+      background-color: #2a2a2a;
+    }
 
-.country {
-  background-color: #1c1c1c;
-  padding: 10px 15px;
-  border-radius: 8px;
-  cursor: pointer;
-  position: relative;
-  transition: background 0.3s;
-}
+    .country-list {
+      display: none;
+      padding: 15px 25px;
+      background-color: #121212;
+    }
 
-.country:hover {
-  background-color: #333;
-}
+    .country-list ul {
+      list-style: none;
+      line-height: 2;
+    }
 
-.country-flag {
-  position: absolute;
-  top: -60px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: none;
-  width: 60px;
-  border: 1px solid #fff;
-}
+    .country-list ul li {
+      font-size: 1rem;
+      color: #ccc;
+    }
 
-.country:hover .country-flag {
-  display: block;
-}
-
-/* Popup modal */
-.modal {
-  display: none;
-  position: fixed;
-  z-index: 999;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  background-color: rgba(0,0,0,0.7);
-}
-
-.modal-content {
-  background-color: #222;
-  margin: 10% auto;
-  padding: 20px;
-  border: 1px solid #444;
-  width: 80%;
-  max-width: 400px;
-  border-radius: 10px;
-}
-
-.close {
-  color: #aaa;
-  float: right;
-  font-size: 24px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
+    footer {
+      text-align: center;
+      margin-top: 60px;
+      font-size: 0.9rem;
+      color: #999;
+    }
   </style>
 </head>
 <body>
+
   <nav>
     <a href="index.html">Home</a>
     <a href="explore.html">Explore</a>
     <a href="flags.html">Flags</a>
     <a href="lab.html">Lab</a>
-  </nav>  <h1>Explore Countries</h1>
-  <input type="text" id="search" placeholder="Search for a country...">  <div id="explore-container"></div>  <!-- Modal -->  <div id="infoModal" class="modal">
-    <div class="modal-content">
-      <span class="close" onclick="closeModal()">&times;</span>
-      <div id="modalContent"></div>
+  </nav>
+
+  <h1>Explore Countries by Continent</h1>
+
+  <div class="continent">
+    <div class="continent-header" onclick="toggleList(this)">Africa</div>
+    <div class="country-list">
+      <ul>
+        <li>Algeria</li>
+        <li>Egypt</li>
+        <li>Ethiopia</li>
+        <li>Libya</li>
+        <li>Morocco</li>
+        <li>Nigeria</li>
+        <li>Tanzania</li>
+        <li>Tunisia</li>
+        <li>Zimbabwe</li>
+      </ul>
     </div>
-  </div>  <script>
-    const countries = {
-      "Africa": ["Algeria", "Egypt", "Ethiopia", "Libya", "Morocco", "Nigeria", "Tanzania", "Tunisia", "Zimbabwe"],
-      "Asia": ["Azerbaijan", "Bahrain", "China", "India", "Iran", "Japan", "Jordan", "Malaysia", "Mongolia", "Pakistan", "Palestine", "Saudi Arabia", "Sri Lanka", "Turkey", "Yemen"],
-      "Europe": ["Austria", "Bulgaria", "France", "Germany", "Greece", "Hungary", "Italy", "Monaco", "Macedonia", "Portugal", "Romania", "Russia", "San Marino", "Spain", "Switzerland", "Vetican City"],
-      "North America": ["Antigua and Barbuda", "Costa Rica", "El Salvador", "Saint Lucia", "USA"],
-      "South America": ["Argentina", "Brazil", "Guyana", "Paraguay", "Uruguay"],
-      "Oceania": ["Australia", "New Zealand", "Solomon Islands"],
-      "Southeast Asia": ["Vietnam"]
-    };
+  </div>
 
-    const container = document.getElementById("explore-container");
+  <div class="continent">
+    <div class="continent-header" onclick="toggleList(this)">Asia</div>
+    <div class="country-list">
+      <ul>
+        <li>Azerbaijan</li>
+        <li>Bahrain</li>
+        <li>China</li>
+        <li>India</li>
+        <li>Iran</li>
+        <li>Japan</li>
+        <li>Jordan</li>
+        <li>Malaysia</li>
+        <li>Mongolia</li>
+        <li>Pakistan</li>
+        <li>Palestine</li>
+        <li>Saudi Arabia</li>
+        <li>Sri Lanka</li>
+        <li>Turkey</li>
+        <li>Vietnam</li>
+        <li>Yemen</li>
+      </ul>
+    </div>
+  </div>
 
-    function createCountryElement(name) {
-      const div = document.createElement("div");
-      div.className = "country";
-      div.innerHTML = `
-        <img class="country-flag" src="images/${name.replace(/ /g, '_')}.png" alt="${name} flag">
-        ${name}
-      `;
-      div.addEventListener("click", () => showModal(name));
-      return div;
+  <div class="continent">
+    <div class="continent-header" onclick="toggleList(this)">Europe</div>
+    <div class="country-list">
+      <ul>
+        <li>Austria</li>
+        <li>Bulgaria</li>
+        <li>France</li>
+        <li>Germany</li>
+        <li>Greece</li>
+        <li>Hungary</li>
+        <li>Italy</li>
+        <li>Monaco</li>
+        <li>Macedonia</li>
+        <li>Portugal</li>
+        <li>Romania</li>
+        <li>Russia</li>
+        <li>San Marino</li>
+        <li>Spain</li>
+        <li>Switzerland</li>
+        <li>Vatican City</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="continent">
+    <div class="continent-header" onclick="toggleList(this)">North America</div>
+    <div class="country-list">
+      <ul>
+        <li>Antigua and Barbuda</li>
+        <li>Costa Rica</li>
+        <li>El Salvador</li>
+        <li>Saint Lucia</li>
+        <li>USA</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="continent">
+    <div class="continent-header" onclick="toggleList(this)">South America</div>
+    <div class="country-list">
+      <ul>
+        <li>Argentina</li>
+        <li>Brazil</li>
+        <li>Guyana</li>
+        <li>Paraguay</li>
+        <li>Uruguay</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="continent">
+    <div class="continent-header" onclick="toggleList(this)">Oceania</div>
+    <div class="country-list">
+      <ul>
+        <li>Australia</li>
+        <li>New Zealand</li>
+        <li>Solomon Islands</li>
+      </ul>
+    </div>
+  </div>
+
+  <footer>
+    &copy; 2025 TravelWithChef | All rights reserved.
+  </footer>
+
+  <script>
+    function toggleList(header) {
+      const list = header.nextElementSibling;
+      list.style.display = list.style.display === 'block' ? 'none' : 'block';
     }
+  </script>
 
-    function renderCountries(filter = "") {
-      container.innerHTML = "";
-      for (const [continent, countryList] of Object.entries(countries)) {
-        const match = countryList.filter(name => name.toLowerCase().includes(filter.toLowerCase()));
-        if (match.length > 0) {
-          const section = document.createElement("div");
-          section.className = "continent";
-
-          const title = document.createElement("h2");
-          title.textContent = continent;
-          section.appendChild(title);
-
-          const list = document.createElement("div");
-          list.className = "country-list";
-          match.forEach(name => list.appendChild(createCountryElement(name)));
-
-          section.appendChild(list);
-          container.appendChild(section);
-        }
-      }
-    }
-
-    function showModal(name) {
-      document.getElementById("infoModal").style.display = "block";
-      document.getElementById("modalContent").innerHTML = `
-        <h2>${name}</h2>
-        <p>More information about ${name} will be added soon!</p>
-      `;
-    }
-
-    function closeModal() {
-      document.getElementById("infoModal").style.display = "none";
-    }
-
-    document.getElementById("search").addEventListener("input", (e) => {
-      renderCountries(e.target.value);
-    });
-
-    window.onclick = function(event) {
-      const modal = document.getElementById("infoModal");
-      if (event.target == modal) {
-        modal.style.display = "none";
-      }
-    }
-
-    renderCountries();
-  </script></body>
+</body>
 </html>
