@@ -3,69 +3,66 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Explore Countries</title>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <style>
     body {
-      background-color: #0f0f0f;
-      font-family: 'Courier New', monospace;
-      color: #ffffff;
       margin: 0;
-      padding: 0;
-    }h1 {
-  text-align: center;
-  padding: 1rem;
-  font-size: 2.5rem;
-  color: #fff;
-}
-
-.continent {
-  background-color: #1a1a1a;
-  margin: 1rem auto;
-  padding: 1rem;
-  border: 1px solid #333;
-  border-radius: 5px;
-  max-width: 800px;
-}
-
-.continent h2 {
-  margin-bottom: 0.5rem;
-  font-size: 2rem;
-  color: #f0f0f0;
-  cursor: pointer;
-}
-
-.countries {
-  display: none;
-  margin-top: 1rem;
-}
-
-.country-button {
-  display: block;
-  background-color: #121212;
-  color: #ffffff;
-  border: 2px solid #ffffff;
-  padding: 0.75rem 1rem;
-  margin: 0.5rem 0;
-  font-size: 1.1rem;
-  text-align: center;
-  border-radius: 4px;
-  cursor: pointer;
-  font-family: 'Courier New', monospace;
-  text-transform: uppercase;
-  transition: background 0.3s ease, transform 0.3s ease;
-}
-
-.country-button:hover {
-  background-color: #ffffff;
-  color: #000000;
-  transform: scale(1.02);
-}
-
+      font-family: 'Share Tech Mono', monospace;
+      background-color: #111;
+      color: #fff;
+    }
+    h1 {
+      text-align: center;
+      padding: 1rem;
+      background-color: #222;
+      color: #fff;
+      border-bottom: 2px solid #333;
+    }
+    .continent {
+      margin: 2rem auto;
+      max-width: 900px;
+      border: 2px solid #333;
+      padding: 1rem;
+      background-color: #1a1a1a;
+      border-radius: 8px;
+    }
+    .continent h2 {
+      color: #ccc;
+      border-bottom: 1px solid #333;
+      padding-bottom: 0.5rem;
+    }
+    .country-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 10px;
+      margin-top: 1rem;
+    }
+    .country-button {
+      background-color: #000;
+      border: 2px solid #555;
+      color: #eee;
+      padding: 10px;
+      text-align: center;
+      font-size: 1rem;
+      border-radius: 4px;
+      box-shadow: inset 0 0 4px #000000cc;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      transition: all 0.3s ease-in-out;
+      cursor: pointer;
+    }
+    .country-button:hover {
+      background-color: #222;
+      color: #fff;
+      transform: scale(1.05);
+      border-color: #888;
+    }
   </style>
 </head>
 <body>
-  <h1>Explore Countries</h1>  <div class="continent">
-    <h2 onclick="toggle('africa')">Africa</h2>
-    <div class="countries" id="africa">
+  <h1>Explore the World</h1>  <div class="continent">
+    <h2>Africa</h2>
+    <div class="country-grid">
       <div class="country-button">Algeria</div>
       <div class="country-button">Egypt</div>
       <div class="country-button">Ethiopia</div>
@@ -77,8 +74,8 @@
       <div class="country-button">Zimbabwe</div>
     </div>
   </div>  <div class="continent">
-    <h2 onclick="toggle('asia')">Asia</h2>
-    <div class="countries" id="asia">
+    <h2>Asia</h2>
+    <div class="country-grid">
       <div class="country-button">Azerbaijan</div>
       <div class="country-button">Bahrain</div>
       <div class="country-button">China</div>
@@ -97,8 +94,8 @@
       <div class="country-button">Yemen</div>
     </div>
   </div>  <div class="continent">
-    <h2 onclick="toggle('europe')">Europe</h2>
-    <div class="countries" id="europe">
+    <h2>Europe</h2>
+    <div class="country-grid">
       <div class="country-button">Austria</div>
       <div class="country-button">Bulgaria</div>
       <div class="country-button">France</div>
@@ -117,8 +114,8 @@
       <div class="country-button">Vetican City</div>
     </div>
   </div>  <div class="continent">
-    <h2 onclick="toggle('north-america')">North America</h2>
-    <div class="countries" id="north-america">
+    <h2>North America</h2>
+    <div class="country-grid">
       <div class="country-button">Antigua and Barbuda</div>
       <div class="country-button">Costa Rica</div>
       <div class="country-button">El Salvador</div>
@@ -126,8 +123,8 @@
       <div class="country-button">USA</div>
     </div>
   </div>  <div class="continent">
-    <h2 onclick="toggle('south-america')">South America</h2>
-    <div class="countries" id="south-america">
+    <h2>South America</h2>
+    <div class="country-grid">
       <div class="country-button">Argentina</div>
       <div class="country-button">Brazil</div>
       <div class="country-button">Guyana</div>
@@ -135,16 +132,12 @@
       <div class="country-button">Uruguay</div>
     </div>
   </div>  <div class="continent">
-    <h2 onclick="toggle('oceania')">Oceania</h2>
-    <div class="countries" id="oceania">
+    <h2>Oceania</h2>
+    <div class="country-grid">
       <div class="country-button">Australia</div>
       <div class="country-button">New Zealand</div>
       <div class="country-button">Solomon Islands</div>
     </div>
-  </div>  <script>
-    function toggle(id) {
-      const el = document.getElementById(id);
-      el.style.display = el.style.display === 'block' ? 'none' : 'block';
-    }
-  </script></body>
+  </div>
+</body>
 </html>
