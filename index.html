@@ -3,108 +3,144 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>World Through Data Science</title>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;600&display=swap" rel="stylesheet">
+  <title>Explore Countries</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      font-family: 'Montserrat', sans-serif;
-      box-sizing: border-box;
-    }
-
     body {
-      background-color: #0f0f0f;
-      color: #f2f2f2;
+      margin: 0;
+      background-color: #111;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       display: flex;
-      flex-direction: column;
       align-items: center;
-      min-height: 100vh;
-      padding: 40px 20px;
-    }
-
-    nav {
-      background-color: #1a1a1a;
-      padding: 15px 0;
-      text-align: center;
-      border-bottom: 1px solid #333;
-      width: 100%;
-    }
-
-    nav a {
-      color: #f5f5f5;
-      margin: 0 15px;
-      text-decoration: none;
-      font-weight: bold;
-    }
-
-    nav a:hover {
-      color: #cccccc;
-    }
-
-    h1 {
-      font-size: 2.8rem;
-      margin-bottom: 20px;
-      color: #ffffff;
-      text-align: center;
-    }
-
-    p {
-      font-size: 1.1rem;
-      max-width: 700px;
-      text-align: center;
-      color: #d4d4d4;
-      margin-bottom: 40px;
-    }
-
-    .buttons {
-      display: flex;
-      gap: 20px;
-      flex-wrap: wrap;
       justify-content: center;
+      height: 100vh;
     }
 
-    .buttons a {
-      background-color: #ffffff;
-      color: #0f0f0f;
-      padding: 12px 24px;
-      text-decoration: none;
-      font-weight: 600;
-      border-radius: 8px;
-      transition: background 0.3s ease;
+    .slider-container {
+      width: 90%;
+      max-width: 800px;
+      overflow: hidden;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+      position: relative;
     }
 
-    .buttons a:hover {
-      background-color: #cccccc;
+    .slider {
+      display: flex;
+      transition: transform 0.5s ease-in-out;
     }
 
-    footer {
-      margin-top: 60px;
-      font-size: 0.9rem;
-      color: #999;
+    .slider img {
+      width: 100%;
+      flex-shrink: 0;
+      height: auto;
+      border-radius: 10px;
     }
+
+    .nav-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255, 255, 255, 0.3);
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      cursor: pointer;
+      font-size: 20px;
+      z-index: 1;
+    }
+
+    .prev { left: 10px; }
+    .next { right: 10px; }
   </style>
 </head>
 <body>
-  <!-- Navigation Bar -->
-  <nav>
-    <a href="index.html">Home</a>
-    <a href="explore.html">Explore</a>
-    <a href="flags.html">Flags</a>
-    <a href="lab.html">Lab</a>
-  </nav>
 
-  <h1>World Through Data Science</h1>
-  <p>
-    Explore countries with powerful insights. Discover real-world photos, colorful flags, and in-depth data to understand population, economy, and environment—paving the way toward a smarter, renewable future.
-  </p>
-  <div class="buttons">
-    <a href="explore.html">Explore Countries</a>
-    <a href="flags.html">Flags Gallery</a>
-    <a href="lab.html">Data Lab</a>
+<div class="slider-container">
+  <div class="slider" id="slider">
+    <!-- Your country images go here -->
+    <img src="algeria.png" alt="Algeria">
+    <img src="zimbabwe.png" alt="Zimbabwe">
+    <img src="azerbaijan.png" alt="Azerbaijan">
+    <img src="bahrain.png" alt="Bahrain">
+    <img src="china.png" alt="China">
+    <img src="india.png" alt="India">
+    <img src="iran.png" alt="Iran">
+    <img src="japan.png" alt="Japan">
+    <img src="jordan.png" alt="Jordan">
+    <img src="malaysia.png" alt="Malaysia">
+    <img src="mongolia.png" alt="Mongolia">
+    <img src="pakistan.png" alt="Pakistan">
+    <img src="palestine.png" alt="Palestine">
+    <img src="saudi-arabia.png" alt="Saudi Arabia">
+    <img src="sri-lanka.png" alt="Sri Lanka">
+    <img src="turkey.png" alt="Turkey">
+    <img src="yemen.png" alt="Yemen">
+    <img src="vietnam.png" alt="Vietnam">
+    <img src="austria.png" alt="Austria">
+    <img src="bulgaria.png" alt="Bulgaria">
+    <img src="france.png" alt="France">
+    <img src="germany.png" alt="Germany">
+    <img src="greece.png" alt="Greece">
+    <img src="hungary.png" alt="Hungary">
+    <img src="italy.png" alt="Italy">
+    <img src="monaco.png" alt="Monaco">
+    <img src="macedonia.png" alt="Macedonia">
+    <img src="portugal.png" alt="Portugal">
+    <img src="romania.png" alt="Romania">
+    <img src="russia.png" alt="Russia">
+    <img src="spain.png" alt="Spain">
+    <img src="switzerland.png" alt="Switzerland">
+    <img src="vetican-city.png" alt="Vatican City">
+    <img src="antigua-and-barbuda.png" alt="Antigua and Barbuda">
+    <img src="costa-rica.png" alt="Costa Rica">
+    <img src="el-salvador.png" alt="El Salvador">
+    <img src="Saint-lucia-png" alt="Saint Lucia">
+    <img src="usa.png" alt="USA">
+    <img src="argentina.png" alt="Argentina">
+    <img src="brazil.png" alt="Brazil">
+    <img src="guyana.png" alt="Guyana">
+    <img src="paraguay.png" alt="Paraguay">
+    <img src="uruguay.png" alt="Uruguay">
+    <img src="australia.png" alt="Australia">
+    <img src="new-zealand.png" alt="New Zealand">
+    <img src="solomon-islands.png" alt="Solomon Islands">
   </div>
-  <footer>
-    &copy; 2025 TravelWithChef | All rights reserved.
-  </footer>
+
+  <button class="nav-btn prev" onclick="prevSlide()">‹</button>
+  <button class="nav-btn next" onclick="nextSlide()">›</button>
+</div>
+
+<script>
+  const slider = document.getElementById('slider');
+  const totalSlides = slider.children.length;
+  let currentIndex = 0;
+
+  function showSlide(index) {
+    slider.style.transform = `translateX(-${index * 100}%)`;
+  }
+
+  function nextSlide() {
+    currentIndex = (currentIndex + 1) % totalSlides;
+    showSlide(currentIndex);
+  }
+
+  function prevSlide() {
+    currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
+    showSlide(currentIndex);
+  }
+
+  // Swipe Support
+  let startX = 0;
+  slider.addEventListener('touchstart', e => {
+    startX = e.touches[0].clientX;
+  });
+
+  slider.addEventListener('touchend', e => {
+    let endX = e.changedTouches[0].clientX;
+    if (startX - endX > 50) nextSlide();
+    else if (endX - startX > 50) prevSlide();
+  });
+</script>
+
 </body>
 </html>
