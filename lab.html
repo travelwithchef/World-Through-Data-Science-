@@ -2,176 +2,96 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Data Science Lab - Weather Analysis</title>
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Weather Data Lab</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    /* Color theme: Black, Off-White, White, Grey */
     body {
-      background-color: #0a0a0a; /* pure black */
-      color: #eaeaea; /* off-white */
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      margin: 0; padding: 20px;
+      background-color: #111;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      padding: 40px;
     }
-
     h1 {
       text-align: center;
-      margin-bottom: 30px;
-      color: #f5f5f5;
-      letter-spacing: 1.5px;
     }
-
-    #search-container {
-      text-align: left;
-      margin-bottom: 15px;
-    }
-
-    input[type="text"] {
-      width: 300px;
-      padding: 8px 12px;
-      font-size: 16px;
-      border-radius: 6px;
-      border: 2px solid #555;
-      background-color: #222;
-      color: #eee;
-      outline: none;
-      transition: border-color 0.3s ease;
-    }
-
-    input[type="text"]:focus {
-      border-color: #ccc;
-      background-color: #111;
-    }
-
-    #chart-container {
-      max-width: 900px;
-      margin: 0 auto;
-      background-color: #121212;
-      border-radius: 10px;
-      padding: 20px;
-      box-shadow: 0 0 10px #333;
-    }
-
-    #info {
-      max-width: 900px;
+    #countryInput {
+      display: block;
       margin: 20px auto;
-      font-size: 14px;
-      color: #888;
-      text-align: center;
+      padding: 10px;
+      width: 300px;
+      font-size: 16px;
+    }
+    canvas {
+      display: block;
+      margin: 30px auto;
+      max-width: 90%;
+      background: #fff;
+      border-radius: 12px;
+      padding: 10px;
     }
   </style>
-
-  <!-- Chart.js CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-
-  <h1>Weather Data Analysis Lab</h1>
-
-  <div id="search-container">
-    <input type="text" id="countrySearch" placeholder="Search for a country..." />
-  </div>
-
-  <div id="chart-container">
-    <canvas id="weatherChart"></canvas>
-  </div>
-
-  <div id="info">Type a country name to view its weather data chart</div>
+  <h1>Weather Data Lab</h1>
+  <input type="text" id="countryInput" placeholder="Enter country name (e.g. India or USA)" />
+  <canvas id="weatherChart" width="600" height="400"></canvas>
 
   <script>
-    let weatherData = {};
-    let chart = null;
+    const ctx = document.getElementById('weatherChart').getContext('2d');
+    let chart;
 
-    async function loadData() {
-      try {
-        const response = await fetch('data/weather-data.json');
-        weatherData = await response.json();
-        document.getElementById('info').textContent = 'Enter a country name above to see the weather trend.';
-      } catch (error) {
-        document.getElementById('info').textContent = 'Failed to load data.';
-        console.error('Error loading weather data:', error);
-      }
+    async function loadWeatherData() {
+      const response = await fetch('data/weather-data.json');
+      const data = await response.json();
+
+      const input = document.getElementById('countryInput');
+      input.addEventListener('input', () => {
+        const country = input.value.trim();
+        if (data[country]) {
+          updateChart(data[country].dates, data[country].temps, country);
+        }
+      });
     }
 
-    function createChart(labels = [], temps = []) {
-      const ctx = document.getElementById('weatherChart').getContext('2d');
-      if(chart) chart.destroy();
-
+    function updateChart(labels, temps, country) {
+      if (chart) {
+        chart.destroy();
+      }
       chart = new Chart(ctx, {
         type: 'line',
         data: {
           labels: labels,
           datasets: [{
-            label: 'Avg Temperature (°C)',
+            label: `Avg Temp in ${country} (°C)`,
             data: temps,
-            borderColor: '#eaeaea',
-            backgroundColor: 'rgba(234,234,234,0.2)',
-            borderWidth: 2,
-            tension: 0.3,
+            borderColor: 'rgba(75, 192, 192, 1)',
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
             fill: true,
-            pointRadius: 3,
-            pointHoverRadius: 6,
-            pointBackgroundColor: '#fff'
+            tension: 0.3,
           }]
         },
         options: {
           responsive: true,
           plugins: {
             legend: {
-              labels: { color: '#eaeaea', font: { size: 14 } }
-            },
-            tooltip: {
-              enabled: true,
-              backgroundColor: '#222',
-              titleColor: '#fff',
-              bodyColor: '#fff'
+              labels: { color: '#fff' }
             }
           },
           scales: {
             x: {
-              ticks: { color: '#bbb' },
-              grid: { color: '#222' }
+              ticks: { color: '#fff' }
             },
             y: {
-              ticks: { color: '#bbb' },
-              grid: { color: '#222' }
+              ticks: { color: '#fff' },
+              beginAtZero: true
             }
           }
         }
       });
     }
 
-    function updateChart(country) {
-      if (!weatherData[country]) {
-        document.getElementById('info').textContent = `No data found for "${country}". Try another.`;
-        createChart([], []);
-        return;
-      }
-
-      const countryData = weatherData[country];
-      createChart(countryData.dates, countryData.temps);
-      document.getElementById('info').textContent = `Showing weather data for ${country}`;
-    }
-
-    document.getElementById('countrySearch').addEventListener('input', (e) => {
-      const input = e.target.value.trim();
-      if(input.length >= 2) {
-        const matched = Object.keys(weatherData).find(c =>
-          c.toLowerCase().startsWith(input.toLowerCase())
-        );
-        if(matched) {
-          updateChart(matched);
-        } else {
-          createChart([], []);
-          document.getElementById('info').textContent = 'No matching country found.';
-        }
-      } else {
-        createChart([], []);
-        document.getElementById('info').textContent = 'Enter at least 2 characters to search.';
-      }
-    });
-
-    loadData();
+    loadWeatherData();
   </script>
 </body>
 </html>
