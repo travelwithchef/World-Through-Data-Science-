@@ -1,197 +1,223 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Data Science Dashboard</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<style>
-  body {
-    background-color: #121212;
-    color: #eee;
-    font-family: Arial, sans-serif;
-    margin: 20px;
-  }
-  select {
-    background-color: #222;
-    color: #eee;
-    border: 1px solid #555;
-    padding: 8px;
-    font-size: 16px;
-    margin-bottom: 30px;
-  }
-  canvas {
-    background-color: #222;
-    border: 1px solid #555;
-    margin-bottom: 40px;
-  }
-  h2 {
-    color: #ddd;
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Data Science Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      background-color: #121212;
+      color: #eee;
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    select {
+      background-color: #222;
+      color: #eee;
+      border: 1px solid #555;
+      padding: 8px;
+      font-size: 16px;
+      margin-bottom: 30px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    select:focus {
+      outline: none;
+      border-color: #888;
+    }
+    canvas {
+      background-color: #222;
+      border: 1px solid #555;
+      margin-bottom: 40px;
+      max-width: 100%;
+      border-radius: 4px;
+    }
+    h1, h2 {
+      color: #eee;
+    }
+    label {
+      font-size: 16px;
+      margin-right: 10px;
+    }
+  </style>
 </head>
 <body>
+  <h1>Monthly Weather Data Visualization</h1>
+  <label for="country-select">Select Country:</label>
+  <select id="country-select" aria-label="Select a country to view weather data"></select>
 
-<h1>Monthly Weather Data Visualization</h1>
-<label for="country-select">Select Country:</label>
-<select id="country-select"></select>
+  <h2>Temperature (°C)</h2>
+  <canvas id="tempChart"></canvas>
 
-<h2>Temperature (°C)</h2>
-<canvas id="tempChart" width="800" height="300"></canvas>
+  <h2>Humidity (%)</h2>
+  <canvas id="humidityChart"></canvas>
 
-<h2>Humidity (%)</h2>
-<canvas id="humidityChart" width="800" height="300"></canvas>
+  <h2>Rainfall (mm)</h2>
+  <canvas id="rainChart"></canvas>
 
-<h2>Rainfall (mm)</h2>
-<canvas id="rainChart" width="800" height="300"></canvas>
-
-<script>
-const weatherData = {
-  "USA": {
-    capital: "Washington, D.C.",
-    data: [
-      {month: "Jan", temp: 3, humidity: 68, rain: 78},
-      {month: "Feb", temp: 5, humidity: 65, rain: 75},
-      {month: "Mar", temp: 10, humidity: 60, rain: 90},
-      {month: "Apr", temp: 15, humidity: 55, rain: 85},
-      {month: "May", temp: 20, humidity: 50, rain: 100},
-      {month: "Jun", temp: 25, humidity: 45, rain: 110},
-      {month: "Jul", temp: 28, humidity: 50, rain: 95},
-      {month: "Aug", temp: 27, humidity: 55, rain: 80},
-      {month: "Sep", temp: 22, humidity: 60, rain: 85},
-      {month: "Oct", temp: 15, humidity: 65, rain: 70},
-      {month: "Nov", temp: 8, humidity: 70, rain: 65},
-      {month: "Dec", temp: 4, humidity: 72, rain: 75}
-    ]
-  },
-  "India": {
-    capital: "New Delhi",
-    data: [
-      {month: "Jan", temp: 15, humidity: 45, rain: 20},
-      {month: "Feb", temp: 18, humidity: 40, rain: 18},
-      {month: "Mar", temp: 25, humidity: 35, rain: 25},
-      {month: "Apr", temp: 30, humidity: 30, rain: 40},
-      {month: "May", temp: 33, humidity: 28, rain: 55},
-      {month: "Jun", temp: 30, humidity: 60, rain: 120},
-      {month: "Jul", temp: 28, humidity: 75, rain: 200},
-      {month: "Aug", temp: 27, humidity: 80, rain: 180},
-      {month: "Sep", temp: 26, humidity: 70, rain: 160},
-      {month: "Oct", temp: 24, humidity: 55, rain: 80},
-      {month: "Nov", temp: 20, humidity: 50, rain: 30},
-      {month: "Dec", temp: 16, humidity: 45, rain: 15}
-    ]
-  },
-  "Japan": {
-    capital: "Tokyo",
-    data: [
-      {month: "Jan", temp: 5, humidity: 60, rain: 52},
-      {month: "Feb", temp: 6, humidity: 58, rain: 60},
-      {month: "Mar", temp: 10, humidity: 55, rain: 110},
-      {month: "Apr", temp: 15, humidity: 60, rain: 125},
-      {month: "May", temp: 20, humidity: 65, rain: 150},
-      {month: "Jun", temp: 22, humidity: 75, rain: 180},
-      {month: "Jul", temp: 28, humidity: 80, rain: 170},
-      {month: "Aug", temp: 30, humidity: 85, rain: 140},
-      {month: "Sep", temp: 25, humidity: 75, rain: 130},
-      {month: "Oct", temp: 18, humidity: 65, rain: 110},
-      {month: "Nov", temp: 13, humidity: 60, rain: 80},
-      {month: "Dec", temp: 8, humidity: 58, rain: 60}
-    ]
-  },
-  // Add more countries here as needed, format is the same
-};
-
-// Fill the dropdown
-const countrySelect = document.getElementById('country-select');
-Object.keys(weatherData).forEach(country => {
-  const option = document.createElement('option');
-  option.value = country;
-  option.textContent = `${country} - ${weatherData[country].capital}`;
-  countrySelect.appendChild(option);
-});
-
-// Chart instances
-let tempChart, humidityChart, rainChart;
-
-function createChart(ctx, label, data, borderColor) {
-  return new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: data.map(d => d.month),
-      datasets: [{
-        label: label,
-        data: data.map(d => d.value),
-        borderColor: borderColor,
-        backgroundColor: 'transparent',
-        borderWidth: 2,
-        tension: 0.3,
-        pointRadius: 4,
-        pointBackgroundColor: borderColor,
-      }]
-    },
-    options: {
-      scales: {
-        y: {
-          beginAtZero: true,
-          ticks: {
-            color: '#eee',
-          },
-          grid: {
-            color: '#444'
-          }
-        },
-        x: {
-          ticks: {
-            color: '#eee',
-          },
-          grid: {
-            color: '#444'
-          }
-        }
+  <script>
+    const weatherData = {
+      "USA": {
+        capital: "Washington, D.C.",
+        data: [
+          {month: "Jan", temp: 3, humidity: 68, rain: 78},
+          {month: "Feb", temp: 5, humidity: 65, rain: 75},
+          {month: "Mar", temp: 10, humidity: 60, rain: 90},
+          {month: "Apr", temp: 15, humidity: 55, rain: 85},
+          {month: "May", temp: 20, humidity: 50, rain: 100},
+          {month: "Jun", temp: 25, humidity: 45, rain: 110},
+          {month: "Jul", temp: 28, humidity: 50, rain: 95},
+          {month: "Aug", temp: 27, humidity: 55, rain: 80},
+          {month: "Sep", temp: 22, humidity: 60, rain: 85},
+          {month: "Oct", temp: 15, humidity: 65, rain: 70},
+          {month: "Nov", temp: 8, humidity: 70, rain: 65},
+          {month: "Dec", temp: 4, humidity: 72, rain: 75}
+        ]
       },
-      plugins: {
-        legend: {
-          labels: {
-            color: '#eee'
-          }
-        },
-        tooltip: {
-          enabled: true,
-          backgroundColor: '#222',
-          titleColor: '#eee',
-          bodyColor: '#ddd',
-        }
+      "India": {
+        capital: "New Delhi",
+        data: [
+          {month: "Jan", temp: 15, humidity: 45, rain: 20},
+          {month: "Feb", temp: 18, humidity: 40, rain: 18},
+          {month: "Mar", temp: 25, humidity: 35, rain: 25},
+          {month: "Apr", temp: 30, humidity: 30, rain: 40},
+          {month: "May", temp: 33, humidity: 28, rain: 55},
+          {month: "Jun", temp: 30, humidity: 60, rain: 120},
+          {month: "Jul", temp: 28, humidity: 75, rain: 200},
+          {month: "Aug", temp: 27, humidity: 80, rain: 180},
+          {month: "Sep", temp: 26, humidity: 70, rain: 160},
+          {month: "Oct", temp: 24, humidity: 55, rain: 80},
+          {month: "Nov", temp: 20, humidity: 50, rain: 30},
+          {month: "Dec", temp: 16, humidity: 45, rain: 15}
+        ]
       },
-      responsive: true,
-      maintainAspectRatio: false,
+      "Japan": {
+        capital: "Tokyo",
+        data: [
+          {month: "Jan", temp: 5, humidity: 60, rain: 52},
+          {month: "Feb", temp: 6, humidity: 58, rain: 60},
+          {month: "Mar", temp: 10, humidity: 55, rain: 110},
+          {month: "Apr", temp: 15, humidity: 60, rain: 125},
+          {month: "May", temp: 20, humidity: 65, rain: 150},
+          {month: "Jun", temp: 22, humidity: 75, rain: 180},
+          {month: "Jul", temp: 28, humidity: 80, rain: 170},
+          {month: "Aug", temp: 30, humidity: 85, rain: 140},
+          {month: "Sep", temp: 25, humidity: 75, rain: 130},
+          {month: "Oct", temp: 18, humidity: 65, rain: 110},
+          {month: "Nov", temp: 13, humidity: 60, rain: 80},
+          {month: "Dec", temp: 8, humidity: 58, rain: 60}
+        ]
+      }
+    };
+
+    // Chart instances
+    let tempChart, humidityChart, rainChart;
+
+    // Function to create a Chart.js line chart
+    function createChart(ctx, label, data, borderColor) {
+      return new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: data.map(d => d.month),
+          datasets: [{
+            label: label,
+            data: data.map(d => d.value),
+            borderColor: borderColor,
+            borderWidth: 2,
+            tension: 0.3,
+            pointRadius: 4,
+            pointBackgroundColor: borderColor,
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: { color: '#eee' },
+              grid: { color: '#444' }
+            },
+            x: {
+              ticks: { color: '#eee' },
+              grid: { color: '#444' }
+            }
+          },
+          plugins: {
+            legend: {
+              labels: { color: '#eee' }
+            },
+            tooltip: {
+              enabled: true,
+              backgroundColor: '#222',
+              titleColor: '#eee',
+              bodyColor: '#ddd'
+            }
+          },
+          responsive: true,
+          maintainAspectRatio: false
+        }
+      });
     }
-  });
-}
 
-function updateCharts(country) {
-  const data = weatherData[country].data;
+    // Function to update charts based on selected country
+    function updateCharts(country) {
+      if (!weatherData[country]) {
+        console.error(`No data available for country: ${country}`);
+        return;
+      }
 
-  const tempData = data.map(d => ({month: d.month, value: d.temp}));
-  const humidityData = data.map(d => ({month: d.month, value: d.humidity}));
-  const rainData = data.map(d => ({month: d.month, value: d.rain}));
+      const data = weatherData[country].data;
+      const tempData = data.map(d => ({month: d.month, value: d.temp}));
+      const humidityData = data.map(d => ({month: d.month, value: d.humidity}));
+      const rainData = data.map(d => ({month: d.month, value: d.rain}));
 
-  // Destroy old charts if exist
-  if (tempChart) tempChart.destroy();
-  if (humidityChart) humidityChart.destroy();
-  if (rainChart) rainChart.destroy();
+      // Destroy old charts if they exist
+      if (tempChart) tempChart.destroy();
+      if (humidityChart) humidityChart.destroy();
+      if (rainChart) rainChart.destroy();
 
-  tempChart = createChart(document.getElementById('tempChart').getContext('2d'), 'Temperature (°C)', tempData, '#eee');
-  humidityChart = createChart(document.getElementById('humidityChart').getContext('2d'), 'Humidity (%)', humidityData, '#bbb');
-  rainChart = createChart(document.getElementById('rainChart').getContext('2d'), 'Rainfall (mm)', rainData, '#888');
-}
+      // Create new charts with distinct colors
+      tempChart = createChart(
+        document.getElementById('tempChart').getContext('2d'),
+        'Temperature (°C)',
+        tempData,
+        '#ff6b6b' // Red for temperature
+      );
+      humidityChart = createChart(
+        document.getElementById('humidityChart').getContext('2d'),
+        'Humidity (%)',
+        humidityData,
+        '#4ecdc4' // Teal for humidity
+      );
+      rainChart = createChart(
+        document.getElementById('rainChart').getContext('2d'),
+        'Rainfall (mm)',
+        rainData,
+        '#45b7d1' // Blue for rainfall
+      );
+    }
 
-// Initial load
-updateCharts(countrySelect.value);
+    // Populate the dropdown and set up initial state
+    const countrySelect = document.getElementById('country-select');
+    Object.keys(weatherData).forEach(country => {
+      const option = document.createElement('option');
+      option.value = country;
+      option.textContent = `${country} - ${weatherData[country].capital}`;
+      countrySelect.appendChild(option);
+    });
 
-countrySelect.addEventListener('change', e => {
-  updateCharts(e.target.value);
-});
-</script>
+    // Set default selection to the first country, if available
+    if (Object.keys(weatherData).length > 0) {
+      countrySelect.value = Object.keys(weatherData)[0]; // e.g., "USA"
+      updateCharts(countrySelect.value); // Initial chart load
+    } else {
+      console.error('No weather data available to display.');
+    }
 
+    // Event listener for dropdown changes
+    countrySelect.addEventListener('change', e => {
+      updateCharts(e.target.value);
+    });
+  </script>
 </body>
 </html>
