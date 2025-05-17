@@ -1,115 +1,112 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Weather Dashboard</title>
+  <meta charset="UTF-8" />
+  <title>Climate Data Dashboard</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     body {
+      background-color: #121212; /* very dark grey/black */
+      color: #f5f5f5; /* off-white */
       font-family: Arial, sans-serif;
-      padding: 2rem;
-      background-color: #f4f4f4;
+      padding: 20px;
     }
-    h1 {
-      text-align: center;
-    }
-    .controls {
-      text-align: center;
-      margin-bottom: 1rem;
-    }
-    .charts {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 2rem;
-      justify-content: center;
+    h1, p {
+      color: #f5f5f5;
     }
     canvas {
-      background-color: #fff;
-      padding: 1rem;
-      border-radius: 10px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      margin: 40px 0;
+      max-width: 800px;
+      background-color: #1e1e1e; /* dark grey */
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 0 10px #000;
     }
   </style>
 </head>
 <body>
-  <h1>Weather Dashboard</h1>  <div class="controls">
-    <label for="start-date">Start Date: </label>
-    <input type="date" id="start-date"><label for="end-date">End Date: </label>
-<input type="date" id="end-date">
 
-<button onclick="applyFilter()">Apply Filter</button>
+  <h1>Climate Data Visualization</h1>
+  <p>Comparing Temperature, Humidity, and Rainfall of 20 Countries</p>
 
-  </div>  <div class="charts">
-    <canvas id="temperatureChart" width="400" height="200"></canvas>
-    <canvas id="humidityChart" width="400" height="200"></canvas>
-    <canvas id="windChart" width="400" height="200"></canvas>
-  </div>  <script>
-    let rawData = [];
-    let temperatureChart, humidityChart, windChart;
+  <canvas id="tempChart"></canvas>
+  <canvas id="humidityChart"></canvas>
+  <canvas id="rainChart"></canvas>
 
-    async function fetchData() {
-      const response = await fetch('./data/weather-data.json');
-      rawData = await response.json();
-      updateCharts(rawData);
-    }
+  <script>
+    const climateData = [
+      { country: "Japan", capital: "Tokyo", temp: 5, humidity: 52, rain: 48 },
+      { country: "Canada", capital: "Ottawa", temp: -9, humidity: 78, rain: 35 },
+      { country: "Brazil", capital: "Brasília", temp: 22, humidity: 70, rain: 180 },
+      { country: "India", capital: "New Delhi", temp: 14, humidity: 60, rain: 20 },
+      { country: "France", capital: "Paris", temp: 6, humidity: 76, rain: 55 },
+      { country: "Australia", capital: "Canberra", temp: 20, humidity: 40, rain: 45 },
+      { country: "Kenya", capital: "Nairobi", temp: 18, humidity: 55, rain: 30 },
+      { country: "Russia", capital: "Moscow", temp: -10, humidity: 85, rain: 24 },
+      { country: "Egypt", capital: "Cairo", temp: 17, humidity: 40, rain: 5 },
+      { country: "Germany", capital: "Berlin", temp: 2, humidity: 80, rain: 42 },
+      { country: "South Korea", capital: "Seoul", temp: -2, humidity: 62, rain: 27 },
+      { country: "United Kingdom", capital: "London", temp: 4, humidity: 82, rain: 49 },
+      { country: "Argentina", capital: "Buenos Aires", temp: 25, humidity: 68, rain: 95 },
+      { country: "Indonesia", capital: "Jakarta", temp: 27, humidity: 85, rain: 320 },
+      { country: "United States", capital: "Washington D.C.", temp: 3, humidity: 70, rain: 61 },
+      { country: "Turkey", capital: "Ankara", temp: 1, humidity: 74, rain: 36 },
+      { country: "Mexico", capital: "Mexico City", temp: 13, humidity: 60, rain: 11 },
+      { country: "South Africa", capital: "Pretoria", temp: 24, humidity: 50, rain: 90 },
+      { country: "China", capital: "Beijing", temp: -4, humidity: 46, rain: 3 },
+      { country: "Italy", capital: "Rome", temp: 9, humidity: 72, rain: 53 }
+    ];
 
-    function applyFilter() {
-      const start = new Date(document.getElementById('start-date').value);
-      const end = new Date(document.getElementById('end-date').value);
+    const labels = climateData.map(d => d.country);
 
-      const filtered = rawData.filter(d => {
-        const date = new Date(d.date);
-        return (!isNaN(start) ? date >= start : true) && (!isNaN(end) ? date <= end : true);
-      });
-
-      updateCharts(filtered);
-    }
-
-    function updateCharts(data) {
-      const labels = data.map(d => d.date);
-      const temps = data.map(d => d.temperature);
-      const humidity = data.map(d => d.humidity);
-      const wind = data.map(d => d.windSpeed);
-
-      if (temperatureChart) temperatureChart.destroy();
-      if (humidityChart) humidityChart.destroy();
-      if (windChart) windChart.destroy();
-
-      const config = (label, dataset, color) => ({
+    const createChart = (ctxId, label, dataField) => {
+      const ctx = document.getElementById(ctxId).getContext('2d');
+      new Chart(ctx, {
         type: 'bar',
         data: {
-          labels: labels,
+          labels,
           datasets: [{
-            label: label,
-            data: dataset,
-            backgroundColor: color
+            label,
+            data: climateData.map(d => d[dataField]),
+            backgroundColor: '#b0b0b0'  // Grey bars
           }]
         },
         options: {
           responsive: true,
+          plugins: {
+            title: {
+              display: true,
+              text: label + ' by Country',
+              color: '#f5f5f5'  // Off-white text
+            },
+            legend: {
+              display: false
+            },
+            tooltip: {
+              backgroundColor: '#333',
+              titleColor: '#f5f5f5',
+              bodyColor: '#f5f5f5'
+            }
+          },
           scales: {
             x: {
-              ticks: { maxRotation: 90, minRotation: 45 }
+              ticks: { color: '#f5f5f5' }, // off-white
+              grid: { color: '#444' }      // dark grey grid
+            },
+            y: {
+              beginAtZero: true,
+              ticks: { color: '#f5f5f5' },
+              grid: { color: '#444' }
             }
           }
         }
       });
+    };
 
-      temperatureChart = new Chart(
-        document.getElementById('temperatureChart'),
-        config('Temperature (°C)', temps, 'rgba(255, 99, 132, 0.7)')
-      );
-      humidityChart = new Chart(
-        document.getElementById('humidityChart'),
-        config('Humidity (%)', humidity, 'rgba(54, 162, 235, 0.7)')
-      );
-      windChart = new Chart(
-        document.getElementById('windChart'),
-        config('Wind Speed (km/h)', wind, 'rgba(75, 192, 192, 0.7)')
-      );
-    }
-
-    fetchData();
+    createChart("tempChart", "Average Temperature (°C)", "temp");
+    createChart("humidityChart", "Average Humidity (%)", "humidity");
+    createChart("rainChart", "Average Rainfall (mm)", "rain");
   </script>
+
 </body>
 </html>
