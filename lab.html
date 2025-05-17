@@ -43,6 +43,7 @@
       border: 1px solid #444;
       border-radius: 5px;
       font-size: 1rem;
+      width: 200px;
     }
     #predictionResult {
       margin-top: 15px;
@@ -64,11 +65,12 @@
   <canvas id="rainChart"></canvas>
 
   <label for="countrySelect">Select a Country:</label>
+  <br />
   <select id="countrySelect">
     <option value="">-- Select a Country --</option>
   </select>
 
-  <canvas id="countryRadar"></canvas>
+  <canvas id="countryRadar" style="max-width:400px;"></canvas>
 
   <table id="dataTable">
     <thead>
@@ -98,7 +100,6 @@
   <div id="predictionResult"></div>
 
   <script>
-    // Data array
     const climateData = [
       { country: "Japan", capital: "Tokyo", temp: 5, humidity: 52, rain: 48 },
       { country: "Canada", capital: "Ottawa", temp: -9, humidity: 78, rain: 35 },
@@ -124,7 +125,6 @@
 
     const labels = climateData.map(d => d.country);
 
-    // Chart creation function
     function createChart(ctxId, label, dataField) {
       const ctx = document.getElementById(ctxId).getContext("2d");
       return new Chart(ctx, {
@@ -180,7 +180,7 @@
     createChart("humidityChart", "Average Humidity (%)", "humidity");
     createChart("rainChart", "Average Rainfall (mm)", "rain");
 
-    // Dropdown fill
+    // Fill dropdown
     const select = document.getElementById("countrySelect");
     climateData.forEach((d, i) => {
       const option = document.createElement("option");
@@ -189,11 +189,16 @@
       select.appendChild(option);
     });
 
-    // Radar Chart
     let radarChart;
     select.addEventListener("change", () => {
-      const index = select.value;
-      if (!index) return;
+      const index = parseInt(select.value);
+      if (isNaN(index)) {
+        if(radarChart) {
+          radarChart.destroy();
+          radarChart = null;
+        }
+        return;
+      }
 
       const item = climateData[index];
       const ctx = document.getElementById("countryRadar").getContext("2d");
@@ -229,39 +234,3 @@
               ticks: { color: "#f5f5f5", beginAtZero: true }
             }
           }
-        }
-      });
-    });
-
-    // Table
-    const tbody = document.querySelector("#dataTable tbody");
-    climateData.forEach(d => {
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td>${d.country}</td>
-        <td>${d.capital}</td>
-        <td>${d.temp}</td>
-        <td>${d.humidity}</td>
-        <td>${d.rain}</td>
-      `;
-      tbody.appendChild(tr);
-    });
-
-    // ============ ML: Multivariate Linear Regression to Predict Rainfall ===========
-    // Using Normal Equation: beta = (X^T * X)^-1 * X^T * y
-
-    // Prepare data matrices
-    // X = [ [1, temp, humidity], ... ]  (1 for intercept)
-    // y = [rainfall,...]
-
-    function transpose(matrix) {
-      return matrix[0].map((_, i) => matrix.map(row => row[i]));
-    }
-
-    function multiply(A, B) {
-      const result = [];
-      for(let i=0; i<A.length; i++) {
-        result[i] = [];
-        for(let j=0; j<B[0].length; j++) {
-          let sum = 0;
-          for(let k=0; k
