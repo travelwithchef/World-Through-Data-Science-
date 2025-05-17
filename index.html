@@ -2,190 +2,191 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>World Gallery</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>World Tour Gallery</title>
   <style>
     body {
       margin: 0;
-      font-family: 'Segoe UI', sans-serif;
       background-color: #000;
       color: #f2f2f2;
-    }
-
-    .slider-container {
-      position: relative;
-      overflow: hidden;
-      width: 100%;
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      font-family: 'Segoe UI', sans-serif;
     }
 
     .slider {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .slides {
       display: flex;
-      transition: transform 0.6s ease-in-out;
-      will-change: transform;
+      transition: transform 0.8s ease-in-out;
+      height: 100%;
     }
 
     .slide {
-      min-width: 100vw;
-      height: 100vh;
-      position: relative;
-      flex-shrink: 0;
+      min-width: 100%;
+      height: 100%;
       display: flex;
       justify-content: center;
       align-items: center;
+      position: relative;
       background-color: #111;
     }
 
     .slide img {
-      width: 90%;
-      max-height: 80vh;
-      border-radius: 12px;
-      box-shadow: 0 8px 30px rgba(255, 255, 255, 0.1);
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background-color: #000;
     }
 
-    .overlay-text {
+    .caption {
       position: absolute;
       bottom: 40px;
       left: 50%;
       transform: translateX(-50%);
       background-color: rgba(0, 0, 0, 0.6);
-      padding: 12px 24px;
-      border-radius: 8px;
-      color: #fff;
+      color: white;
+      padding: 10px 20px;
       font-size: 1.5rem;
-      font-weight: bold;
-      opacity: 0;
-      animation: fadeIn 1.2s ease forwards;
+      border-radius: 8px;
+      backdrop-filter: blur(5px);
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
 
-    @keyframes fadeIn {
-      to { opacity: 1; }
-    }
-
-    .nav-buttons {
+    .nav {
       position: absolute;
       top: 50%;
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
       transform: translateY(-50%);
-      padding: 0 20px;
-      box-sizing: border-box;
-    }
-
-    .nav-buttons button {
-      background-color: rgba(255,255,255,0.1);
-      border: none;
-      color: white;
-      font-size: 2rem;
-      padding: 10px;
+      font-size: 3rem;
+      color: #fff;
+      background-color: rgba(255, 255, 255, 0.1);
+      padding: 0 15px;
       cursor: pointer;
-      border-radius: 50%;
-      transition: background 0.3s;
+      z-index: 10;
+      user-select: none;
     }
 
-    .nav-buttons button:hover {
-      background-color: rgba(255,255,255,0.3);
+    .nav.left {
+      left: 10px;
+    }
+
+    .nav.right {
+      right: 10px;
     }
 
     .dots {
       position: absolute;
-      bottom: 20px;
-      width: 100%;
+      bottom: 15px;
+      left: 50%;
+      transform: translateX(-50%);
       display: flex;
-      justify-content: center;
       gap: 8px;
     }
 
     .dot {
-      height: 10px;
-      width: 10px;
-      background-color: grey;
+      width: 12px;
+      height: 12px;
+      background-color: #999;
       border-radius: 50%;
-      display: inline-block;
-      transition: background-color 0.3s ease;
+      cursor: pointer;
+      transition: background 0.3s;
     }
 
     .dot.active {
-      background-color: white;
+      background-color: #fff;
+    }
+
+    @media (max-width: 768px) {
+      .caption {
+        font-size: 1rem;
+      }
+
+      .nav {
+        font-size: 2rem;
+      }
     }
   </style>
 </head>
 <body>
-
-  <div class="slider-container">
-    <div class="slider" id="slider">
-      <!-- Slides inserted dynamically -->
+  <div class="slider">
+    <div class="slides" id="slides">
+      <!-- Slides will be injected here -->
     </div>
 
-    <div class="nav-buttons">
-      <button onclick="prevSlide()">‹</button>
-      <button onclick="nextSlide()">›</button>
-    </div>
+    <div class="nav left" onclick="prevSlide()">‹</div>
+    <div class="nav right" onclick="nextSlide()">›</div>
 
     <div class="dots" id="dots"></div>
   </div>
 
   <script>
-    const images = [
-      'algeria.png','zimbabwe.png','azerbaijan.png','bahrain.png','china.png',
-      'india.png','iran.png','japan.png','jordan.png','malaysia.png','mongolia.png',
-      'pakistan.png','palestine.png','saudi-arabia.png','sri-lanka.png','turkey.png',
-      'yemen.png','vietnam.png','austria.png','bulgaria.png','france.png','germany.png',
-      'greece.png','hungary.png','italy.png','monaco.png','macedonia.png','portugal.png',
-      'romania.png','russia.png','spain.png','switzerland.png','vetican-city.png',
-      'antigua-and-barbuda.png','costa-rica.png','el-salvador.png','Saint-lucia-png',
-      'usa.png','argentina.png','brazil.png','guyana.png','paraguay.png','uruguay.png',
-      'australia.png','new-zealand.png','solomon-islands.png'
+    const imageList = [
+      "algeria.png", "zimbabwe.png", "azerbaijan.png", "bahrain.png",
+      "china.png", "india.png", "iran.png", "japan.png", "jordan.png",
+      "malaysia.png", "mongolia.png", "pakistan.png", "palestine.png",
+      "saudi-arabia.png", "sri-lanka.png", "turkey.png", "yemen.png",
+      "vietnam.png", "austria.png", "bulgaria.png", "france.png",
+      "germany.png", "greece.png", "hungary.png", "italy.png", "monaco.png",
+      "macedonia.png", "portugal.png", "romania.png", "russia.png",
+      "spain.png", "switzerland.png", "vetican-city.png",
+      "antigua-and-barbuda.png", "costa-rica.png", "el-salvador.png",
+      "Saint-lucia.png", "usa.png", "argentina.png", "brazil.png",
+      "guyana.png", "paraguay.png", "uruguay.png", "australia.png",
+      "new-zealand.png", "solomon-islands.png"
     ];
 
-    const slider = document.getElementById("slider");
-    const dots = document.getElementById("dots");
+    const getCountryName = (filename) => {
+      return filename
+        .replace('.png', '')
+        .replace(/-/g, ' ')
+        .replace(/\b\w/g, (l) => l.toUpperCase());
+    };
 
-    images.forEach((img, index) => {
-      const countryName = img.replace(/[-_]/g, ' ').replace('.png', '').replace(/\b\w/g, l => l.toUpperCase());
+    const slidesContainer = document.getElementById('slides');
+    const dotsContainer = document.getElementById('dots');
 
-      const slide = document.createElement("div");
-      slide.className = "slide";
+    imageList.forEach((img, i) => {
+      const slide = document.createElement('div');
+      slide.className = 'slide';
       slide.innerHTML = `
-        <img src="${img}" alt="${countryName}">
-        <div class="overlay-text">${countryName}</div>
+        <img src="${img}" alt="${getCountryName(img)}">
+        <div class="caption">${getCountryName(img)}</div>
       `;
-      slider.appendChild(slide);
+      slidesContainer.appendChild(slide);
 
-      const dot = document.createElement("span");
-      dot.className = "dot";
-      dot.onclick = () => goToSlide(index);
-      dots.appendChild(dot);
+      const dot = document.createElement('div');
+      dot.className = 'dot';
+      dot.onclick = () => showSlide(i);
+      dotsContainer.appendChild(dot);
     });
 
-    let currentSlide = 0;
-    updateSlider();
+    let currentIndex = 0;
+    const slides = document.querySelectorAll('.slide');
+    const dots = document.querySelectorAll('.dot');
 
-    function updateSlider() {
-      slider.style.transform = `translateX(-${currentSlide * 100}vw)`;
-      document.querySelectorAll(".dot").forEach((d, i) =>
-        d.classList.toggle("active", i === currentSlide)
+    const showSlide = (index) => {
+      if (index < 0) index = imageList.length - 1;
+      if (index >= imageList.length) index = 0;
+      currentIndex = index;
+      slidesContainer.style.transform = `translateX(-${index * 100}%)`;
+      dots.forEach((dot, i) =>
+        dot.classList.toggle('active', i === index)
       );
-    }
+    };
 
-    function nextSlide() {
-      currentSlide = (currentSlide + 1) % images.length;
-      updateSlider();
-    }
+    const prevSlide = () => showSlide(currentIndex - 1);
+    const nextSlide = () => showSlide(currentIndex + 1);
 
-    function prevSlide() {
-      currentSlide = (currentSlide - 1 + images.length) % images.length;
-      updateSlider();
-    }
+    showSlide(0);
 
-    function goToSlide(index) {
-      currentSlide = index;
-      updateSlider();
-    }
+    // Auto-slide
+    setInterval(() => {
+      nextSlide();
+    }, 6000);
   </script>
 </body>
 </html>
