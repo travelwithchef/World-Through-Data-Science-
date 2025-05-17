@@ -1,207 +1,188 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>World Tour Gallery</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>World Visual Gallery</title>
   <style>
-    body {
+    * {
       margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
       background-color: #000;
-      color: #f2f2f2;
-      font-family: 'Segoe UI', sans-serif;
-    }.slider {
-  position: relative;
-  width: 100%;
-  height: 100vh;
-  overflow: hidden;
-}
+      color: #fff;
+      height: 100vh;
+      overflow: hidden;
+      position: relative;
+    }
 
-.slides {
-  display: flex;
-  transition: transform 0.8s ease-in-out;
-  height: 100%;
-}
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 40px;
+      background-color: #111;
+      position: absolute;
+      width: 100%;
+      top: 0;
+      z-index: 10;
+    }
 
-.slide {
-  min-width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  background-color: #111;
-}
+    .nav-links {
+      display: flex;
+      gap: 20px;
+    }
 
-.slide img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  background-color: #000;
-  transition: transform 0.5s ease;
-}
+    .nav-links a {
+      color: #f4f4f4;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
 
-.slide:hover img {
-  transform: scale(1.03);
-}
+    .nav-links a:hover {
+      color: #ccc;
+    }
 
-.caption {
-  position: absolute;
-  bottom: 40px;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: rgba(0, 0, 0, 0.6);
-  color: white;
-  padding: 10px 20px;
-  font-size: 1.5rem;
-  border-radius: 8px;
-  backdrop-filter: blur(5px);
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
+    .search-bar {
+      background-color: #222;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 4px;
+      color: #fff;
+      font-size: 14px;
+    }
 
-.nav {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 3rem;
-  color: #fff;
-  background-color: rgba(255, 255, 255, 0.1);
-  padding: 0 15px;
-  cursor: pointer;
-  z-index: 10;
-  user-select: none;
-}
+    .slider {
+      display: flex;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      height: 100vh;
+      scroll-behavior: smooth;
+    }
 
-.nav.left {
-  left: 10px;
-}
+    .slide {
+      flex: none;
+      width: 100%;
+      height: 100%;
+      scroll-snap-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
 
-.nav.right {
-  right: 10px;
-}
+    .slide img {
+      max-width: 40vw;
+      max-height: 70vh;
+      object-fit: contain;
+      border-radius: 12px;
+      box-shadow: 0 0 30px rgba(255, 255, 255, 0.08);
+    }
 
-.dots {
-  position: absolute;
-  bottom: 15px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 8px;
-}
+    .progress-bar {
+      height: 4px;
+      background: grey;
+      width: 100%;
+      position: absolute;
+      top: 68px;
+      left: 0;
+      z-index: 9;
+    }
 
-.dot {
-  width: 12px;
-  height: 12px;
-  background-color: #999;
-  border-radius: 50%;
-  cursor: pointer;
-  transition: background 0.3s;
-}
-
-.dot.active {
-  background-color: #fff;
-}
-
-.progress-bar {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 4px;
-  background-color: #ccc;
-  transition: width 0.1s linear;
-  z-index: 5;
-}
-
-@media (max-width: 768px) {
-  .caption {
-    font-size: 1rem;
-  }
-
-  .nav {
-    font-size: 2rem;
-  }
-}
-
+    .progress {
+      height: 100%;
+      width: 0%;
+      background: #fff;
+      transition: width 5s linear;
+    }
   </style>
 </head>
 <body>
-  <div class="slider">
-    <div class="progress-bar" id="progressBar"></div>
-    <div class="slides" id="slides"></div>
-    <div class="nav left" onclick="prevSlide()">‹</div>
-    <div class="nav right" onclick="nextSlide()">›</div>
-    <div class="dots" id="dots"></div>
-  </div>  <script>
-    const imageList = [
-      "algeria.png", "zimbabwe.png", "azerbaijan.png", "bahrain.png",
-      "china.png", "india.png", "iran.png", "japan.png", "jordan.png",
-      "malaysia.png", "mongolia.png", "pakistan.png", "palestine.png",
-      "saudi-arabia.png", "sri-lanka.png", "turkey.png", "yemen.png",
-      "vietnam.png", "austria.png", "bulgaria.png", "france.png",
-      "germany.png", "greece.png", "hungary.png", "italy.png", "monaco.png",
-      "macedonia.png", "portugal.png", "romania.png", "russia.png",
-      "spain.png", "switzerland.png", "vetican-city.png",
-      "antigua-and-barbuda.png", "costa-rica.png", "el-salvador.png",
-      "Saint-lucia.png", "usa.png", "argentina.png", "brazil.png",
-      "guyana.png", "paraguay.png", "uruguay.png", "australia.png",
-      "new-zealand.png", "solomon-islands.png"
-    ];
+  <header>
+    <input class="search-bar" type="text" placeholder="Search countries..." />
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="explore.html">Explore Country</a>
+      <a href="lab.html">Data Science Lab</a>
+    </div>
+  </header>
 
-    const getCountryName = (filename) => {
-      return filename
-        .replace('.png', '')
-        .replace(/-/g, ' ')
-        .replace(/\b\w/g, (l) => l.toUpperCase());
-    };
+  <div class="progress-bar"><div class="progress" id="progress"></div></div>
 
-    const slidesContainer = document.getElementById('slides');
-    const dotsContainer = document.getElementById('dots');
-    const progressBar = document.getElementById('progressBar');
+  <div class="slider" id="slider">
+    <!-- Image Slides -->
+    <div class="slide"><img src="algeria.png" alt="Algeria" /></div>
+    <div class="slide"><img src="zimbabwe.png" alt="Zimbabwe" /></div>
+    <div class="slide"><img src="azerbaijan.png" alt="Azerbaijan" /></div>
+    <div class="slide"><img src="bahrain.png" alt="Bahrain" /></div>
+    <div class="slide"><img src="china.png" alt="China" /></div>
+    <div class="slide"><img src="india.png" alt="India" /></div>
+    <div class="slide"><img src="iran.png" alt="Iran" /></div>
+    <div class="slide"><img src="japan.png" alt="Japan" /></div>
+    <div class="slide"><img src="jordan.png" alt="Jordan" /></div>
+    <div class="slide"><img src="malaysia.png" alt="Malaysia" /></div>
+    <div class="slide"><img src="mongolia.png" alt="Mongolia" /></div>
+    <div class="slide"><img src="pakistan.png" alt="Pakistan" /></div>
+    <div class="slide"><img src="palestine.png" alt="Palestine" /></div>
+    <div class="slide"><img src="saudi-arabia.png" alt="Saudi Arabia" /></div>
+    <div class="slide"><img src="sri-lanka.png" alt="Sri Lanka" /></div>
+    <div class="slide"><img src="turkey.png" alt="Turkey" /></div>
+    <div class="slide"><img src="yemen.png" alt="Yemen" /></div>
+    <div class="slide"><img src="vietnam.png" alt="Vietnam" /></div>
+    <div class="slide"><img src="austria.png" alt="Austria" /></div>
+    <div class="slide"><img src="bulgaria.png" alt="Bulgaria" /></div>
+    <div class="slide"><img src="france.png" alt="France" /></div>
+    <div class="slide"><img src="germany.png" alt="Germany" /></div>
+    <div class="slide"><img src="greece.png" alt="Greece" /></div>
+    <div class="slide"><img src="hungary.png" alt="Hungary" /></div>
+    <div class="slide"><img src="italy.png" alt="Italy" /></div>
+    <div class="slide"><img src="monaco.png" alt="Monaco" /></div>
+    <div class="slide"><img src="macedonia.png" alt="Macedonia" /></div>
+    <div class="slide"><img src="portugal.png" alt="Portugal" /></div>
+    <div class="slide"><img src="romania.png" alt="Romania" /></div>
+    <div class="slide"><img src="russia.png" alt="Russia" /></div>
+    <div class="slide"><img src="spain.png" alt="Spain" /></div>
+    <div class="slide"><img src="switzerland.png" alt="Switzerland" /></div>
+    <div class="slide"><img src="vetican-city.png" alt="Vatican City" /></div>
+    <div class="slide"><img src="antigua-and-barbuda.png" alt="Antigua and Barbuda" /></div>
+    <div class="slide"><img src="costa-rica.png" alt="Costa Rica" /></div>
+    <div class="slide"><img src="el-salvador.png" alt="El Salvador" /></div>
+    <div class="slide"><img src="saint-lucia.png" alt="Saint Lucia" /></div>
+    <div class="slide"><img src="usa.png" alt="USA" /></div>
+    <div class="slide"><img src="argentina.png" alt="Argentina" /></div>
+    <div class="slide"><img src="brazil.png" alt="Brazil" /></div>
+    <div class="slide"><img src="guyana.png" alt="Guyana" /></div>
+    <div class="slide"><img src="paraguay.png" alt="Paraguay" /></div>
+    <div class="slide"><img src="uruguay.png" alt="Uruguay" /></div>
+    <div class="slide"><img src="australia.png" alt="Australia" /></div>
+    <div class="slide"><img src="new-zealand.png" alt="New Zealand" /></div>
+    <div class="slide"><img src="solomon-islands.png" alt="Solomon Islands" /></div>
+  </div>
 
-    imageList.forEach((img, i) => {
-      const slide = document.createElement('div');
-      slide.className = 'slide';
-      slide.innerHTML = `
-        <img src="${img}" alt="${getCountryName(img)}">
-        <div class="caption">${getCountryName(img)}</div>
-      `;
-      slidesContainer.appendChild(slide);
+  <script>
+    const slider = document.getElementById('slider');
+    const progress = document.getElementById('progress');
+    let current = 0;
 
-      const dot = document.createElement('div');
-      dot.className = 'dot';
-      dot.onclick = () => showSlide(i);
-      dotsContainer.appendChild(dot);
-    });
+    function advanceSlide() {
+      current++;
+      if (current >= slider.children.length) current = 0;
+      slider.scrollTo({
+        left: slider.children[current].offsetLeft,
+        behavior: 'smooth'
+      });
 
-    let currentIndex = 0;
-    const slides = document.querySelectorAll('.slide');
-    const dots = document.querySelectorAll('.dot');
+      progress.style.width = '0%';
+      setTimeout(() => progress.style.width = '100%', 100);
+    }
 
-    const showSlide = (index) => {
-      if (index < 0) index = imageList.length - 1;
-      if (index >= imageList.length) index = 0;
-      currentIndex = index;
-      slidesContainer.style.transform = `translateX(-${index * 100}%)`;
-      dots.forEach((dot, i) => dot.classList.toggle('active', i === index));
-    };
-
-    const prevSlide = () => showSlide(currentIndex - 1);
-    const nextSlide = () => showSlide(currentIndex + 1);
-
-    showSlide(0);
-
-    // Auto-slide with progress bar
-    let intervalTime = 6000;
-    let elapsed = 0;
-    let autoSlide = setInterval(() => {
-      nextSlide();
-      elapsed = 0;
-    }, intervalTime);
-
-    setInterval(() => {
-      elapsed += 100;
-      const percent = (elapsed / intervalTime) * 100;
-      progressBar.style.width = percent + '%';
-    }, 100);
-  </script></body>
+    setInterval(advanceSlide, 5000); // 5 seconds
+    window.onload = () => progress.style.width = '100%';
+  </script>
+</body>
 </html>
