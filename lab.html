@@ -2,38 +2,103 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Climate Data Dashboard</title>
+  <title>Advanced Climate Dashboard with Prediction</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     body {
-      background-color: #121212; /* very dark grey/black */
-      color: #f5f5f5; /* off-white */
+      background-color: #121212;
+      color: #f5f5f5;
       font-family: Arial, sans-serif;
       padding: 20px;
     }
-    h1, p {
+    h1, p, label {
       color: #f5f5f5;
     }
     canvas {
       margin: 40px 0;
       max-width: 800px;
-      background-color: #1e1e1e; /* dark grey */
+      background-color: #1e1e1e;
       border-radius: 8px;
       padding: 20px;
       box-shadow: 0 0 10px #000;
+    }
+    #dataTable {
+      background-color: #1e1e1e;
+      border-collapse: collapse;
+      color: #f5f5f5;
+      margin-top: 20px;
+      width: 100%;
+      max-width: 800px;
+    }
+    #dataTable th, #dataTable td {
+      border: 1px solid #333;
+      padding: 8px;
+      text-align: left;
+    }
+    #countrySelect, input[type="number"], button {
+      margin-top: 20px;
+      background-color: #1e1e1e;
+      color: #f5f5f5;
+      padding: 10px;
+      border: 1px solid #444;
+      border-radius: 5px;
+      font-size: 1rem;
+    }
+    #predictionResult {
+      margin-top: 15px;
+      font-weight: bold;
+      color: #b0b0b0;
+    }
+    .input-group {
+      margin-top: 15px;
     }
   </style>
 </head>
 <body>
 
-  <h1>Climate Data Visualization</h1>
-  <p>Comparing Temperature, Humidity, and Rainfall of 20 Countries</p>
+  <h1>Advanced Climate Data Visualization with Rainfall Prediction</h1>
+  <p>Use the dropdown to explore data, and try predicting rainfall by entering temperature and humidity.</p>
 
   <canvas id="tempChart"></canvas>
   <canvas id="humidityChart"></canvas>
   <canvas id="rainChart"></canvas>
 
+  <label for="countrySelect">Select a Country:</label>
+  <select id="countrySelect">
+    <option value="">-- Select a Country --</option>
+  </select>
+
+  <canvas id="countryRadar"></canvas>
+
+  <table id="dataTable">
+    <thead>
+      <tr>
+        <th>Country</th>
+        <th>Capital</th>
+        <th>Temperature (°C)</th>
+        <th>Humidity (%)</th>
+        <th>Rainfall (mm)</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <div class="input-group">
+    <label for="tempInput">Enter Temperature (°C):</label><br />
+    <input type="number" id="tempInput" step="0.1" />
+  </div>
+
+  <div class="input-group">
+    <label for="humidityInput">Enter Humidity (%):</label><br />
+    <input type="number" id="humidityInput" step="0.1" />
+  </div>
+
+  <button id="predictBtn">Predict Rainfall</button>
+
+  <div id="predictionResult"></div>
+
   <script>
+    // Data array
     const climateData = [
       { country: "Japan", capital: "Tokyo", temp: 5, humidity: 52, rain: 48 },
       { country: "Canada", capital: "Ottawa", temp: -9, humidity: 78, rain: 35 },
@@ -59,16 +124,17 @@
 
     const labels = climateData.map(d => d.country);
 
-    const createChart = (ctxId, label, dataField) => {
-      const ctx = document.getElementById(ctxId).getContext('2d');
-      new Chart(ctx, {
-        type: 'bar',
+    // Chart creation function
+    function createChart(ctxId, label, dataField) {
+      const ctx = document.getElementById(ctxId).getContext("2d");
+      return new Chart(ctx, {
+        type: "bar",
         data: {
           labels,
           datasets: [{
             label,
             data: climateData.map(d => d[dataField]),
-            backgroundColor: '#b0b0b0'  // Grey bars
+            backgroundColor: "#b0b0b0"
           }]
         },
         options: {
@@ -76,37 +142,126 @@
           plugins: {
             title: {
               display: true,
-              text: label + ' by Country',
-              color: '#f5f5f5'  // Off-white text
+              text: label + " by Country",
+              color: "#f5f5f5"
             },
             legend: {
               display: false
             },
             tooltip: {
-              backgroundColor: '#333',
-              titleColor: '#f5f5f5',
-              bodyColor: '#f5f5f5'
+              callbacks: {
+                label: function(context) {
+                  const i = context.dataIndex;
+                  const item = climateData[i];
+                  return `${item.country} (${item.capital}): ${context.raw}`;
+                }
+              },
+              backgroundColor: "#333",
+              titleColor: "#f5f5f5",
+              bodyColor: "#f5f5f5"
             }
           },
           scales: {
             x: {
-              ticks: { color: '#f5f5f5' }, // off-white
-              grid: { color: '#444' }      // dark grey grid
+              ticks: { color: "#f5f5f5" },
+              grid: { color: "#444" }
             },
             y: {
               beginAtZero: true,
-              ticks: { color: '#f5f5f5' },
-              grid: { color: '#444' }
+              ticks: { color: "#f5f5f5" },
+              grid: { color: "#444" }
             }
           }
         }
       });
-    };
+    }
 
     createChart("tempChart", "Average Temperature (°C)", "temp");
     createChart("humidityChart", "Average Humidity (%)", "humidity");
     createChart("rainChart", "Average Rainfall (mm)", "rain");
-  </script>
 
-</body>
-</html>
+    // Dropdown fill
+    const select = document.getElementById("countrySelect");
+    climateData.forEach((d, i) => {
+      const option = document.createElement("option");
+      option.value = i;
+      option.textContent = d.country;
+      select.appendChild(option);
+    });
+
+    // Radar Chart
+    let radarChart;
+    select.addEventListener("change", () => {
+      const index = select.value;
+      if (!index) return;
+
+      const item = climateData[index];
+      const ctx = document.getElementById("countryRadar").getContext("2d");
+      if (radarChart) radarChart.destroy();
+      radarChart = new Chart(ctx, {
+        type: "radar",
+        data: {
+          labels: ["Temperature (°C)", "Humidity (%)", "Rainfall (mm)"],
+          datasets: [{
+            label: item.country + " - " + item.capital,
+            data: [item.temp, item.humidity, item.rain],
+            backgroundColor: "rgba(176,176,176,0.4)",
+            borderColor: "#b0b0b0",
+            pointBackgroundColor: "#f5f5f5"
+          }]
+        },
+        options: {
+          plugins: {
+            title: {
+              display: true,
+              text: "Climate Overview - " + item.country,
+              color: "#f5f5f5"
+            },
+            legend: {
+              labels: { color: "#f5f5f5" }
+            }
+          },
+          scales: {
+            r: {
+              angleLines: { color: "#444" },
+              grid: { color: "#444" },
+              pointLabels: { color: "#f5f5f5" },
+              ticks: { color: "#f5f5f5", beginAtZero: true }
+            }
+          }
+        }
+      });
+    });
+
+    // Table
+    const tbody = document.querySelector("#dataTable tbody");
+    climateData.forEach(d => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${d.country}</td>
+        <td>${d.capital}</td>
+        <td>${d.temp}</td>
+        <td>${d.humidity}</td>
+        <td>${d.rain}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+    // ============ ML: Multivariate Linear Regression to Predict Rainfall ===========
+    // Using Normal Equation: beta = (X^T * X)^-1 * X^T * y
+
+    // Prepare data matrices
+    // X = [ [1, temp, humidity], ... ]  (1 for intercept)
+    // y = [rainfall,...]
+
+    function transpose(matrix) {
+      return matrix[0].map((_, i) => matrix.map(row => row[i]));
+    }
+
+    function multiply(A, B) {
+      const result = [];
+      for(let i=0; i<A.length; i++) {
+        result[i] = [];
+        for(let j=0; j<B[0].length; j++) {
+          let sum = 0;
+          for(let k=0; k
