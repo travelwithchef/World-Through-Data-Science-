@@ -1,148 +1,115 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Weather Data Analysis</title>
-  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.8.0/math.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weather Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    body { font-family: Arial, sans-serif; padding: 20px; }
-    h1, h2 { margin-top: 40px; }
-    .plot { margin-bottom: 50px; }
-    table { border-collapse: collapse; width: 100%; }
-    th, td { border: 1px solid #ccc; padding: 8px; text-align: right; }
-    th { background-color: #f2f2f2; }
+    body {
+      font-family: Arial, sans-serif;
+      padding: 2rem;
+      background-color: #f4f4f4;
+    }
+    h1 {
+      text-align: center;
+    }
+    .controls {
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+    .charts {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      justify-content: center;
+    }
+    canvas {
+      background-color: #fff;
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
   </style>
 </head>
 <body>
+  <h1>Weather Dashboard</h1>  <div class="controls">
+    <label for="start-date">Start Date: </label>
+    <input type="date" id="start-date"><label for="end-date">End Date: </label>
+<input type="date" id="end-date">
 
-  <h1>Weather Data Analysis</h1>
+<button onclick="applyFilter()">Apply Filter</button>
 
-  <h2>Summary Statistics</h2>
-  <div id="summary-table"></div>
+  </div>  <div class="charts">
+    <canvas id="temperatureChart" width="400" height="200"></canvas>
+    <canvas id="humidityChart" width="400" height="200"></canvas>
+    <canvas id="windChart" width="400" height="200"></canvas>
+  </div>  <script>
+    let rawData = [];
+    let temperatureChart, humidityChart, windChart;
 
-  <h2>Correlation Heatmap</h2>
-  <div id="heatmap" class="plot"></div>
-
-  <h2>Histograms</h2>
-  <div id="histograms"></div>
-
-  <script>
-    async function loadData() {
-      const response = await fetch('data/weather-data.json');
-      const data = await response.json();
-      return data;
+    async function fetchData() {
+      const response = await fetch('./data/weather-data.json');
+      rawData = await response.json();
+      updateCharts(rawData);
     }
 
-    function summarize(data, numericKeys) {
-      const summary = {};
-      numericKeys.forEach(key => {
-        const values = data.map(d => +d[key]).filter(v => !isNaN(v));
-        summary[key] = {
-          count: values.length,
-          mean: math.mean(values).toFixed(2),
-          std: math.std(values).toFixed(2),
-          min: math.min(values).toFixed(2),
-          max: math.max(values).toFixed(2)
-        };
+    function applyFilter() {
+      const start = new Date(document.getElementById('start-date').value);
+      const end = new Date(document.getElementById('end-date').value);
+
+      const filtered = rawData.filter(d => {
+        const date = new Date(d.date);
+        return (!isNaN(start) ? date >= start : true) && (!isNaN(end) ? date <= end : true);
       });
-      return summary;
+
+      updateCharts(filtered);
     }
 
-    function renderSummaryTable(summary) {
-      const table = document.createElement("table");
-      const keys = Object.keys(summary);
-      const stats = ["count", "mean", "std", "min", "max"];
-      
-      let thead = "<tr><th>Feature</th>";
-      stats.forEach(s => thead += `<th>${s}</th>`);
-      thead += "</tr>";
-      table.innerHTML = thead;
+    function updateCharts(data) {
+      const labels = data.map(d => d.date);
+      const temps = data.map(d => d.temperature);
+      const humidity = data.map(d => d.humidity);
+      const wind = data.map(d => d.windSpeed);
 
-      keys.forEach(k => {
-        const row = summary[k];
-        let tr = `<tr><td>${k}</td>`;
-        stats.forEach(s => tr += `<td>${row[s]}</td>`);
-        tr += "</tr>";
-        table.innerHTML += tr;
-      });
+      if (temperatureChart) temperatureChart.destroy();
+      if (humidityChart) humidityChart.destroy();
+      if (windChart) windChart.destroy();
 
-      document.getElementById("summary-table").appendChild(table);
-    }
-
-    function renderHistograms(data, numericKeys) {
-      numericKeys.forEach(key => {
-        const values = data.map(d => +d[key]).filter(v => !isNaN(v));
-        const trace = {
-          x: values,
-          type: 'histogram',
-          marker: { color: 'steelblue' }
-        };
-        const layout = {
-          title: `Histogram of ${key}`,
-          xaxis: { title: key },
-          yaxis: { title: 'Count' }
-        };
-        const div = document.createElement("div");
-        div.className = "plot";
-        document.getElementById("histograms").appendChild(div);
-        Plotly.newPlot(div, [trace], layout);
-      });
-    }
-
-    function renderHeatmap(data, numericKeys) {
-      const matrix = [];
-      numericKeys.forEach(i => {
-        const row = [];
-        numericKeys.forEach(j => {
-          const xi = data.map(d => +d[i]).filter(v => !isNaN(v));
-          const xj = data.map(d => +d[j]).filter(v => !isNaN(v));
-          const corr = math.corr(xi, xj);
-          row.push(corr || 0);
-        });
-        matrix.push(row);
-      });
-
-      const trace = {
-        z: matrix,
-        x: numericKeys,
-        y: numericKeys,
-        type: 'heatmap',
-        colorscale: 'YlGnBu'
-      };
-
-      Plotly.newPlot("heatmap", [trace], {
-        title: "Correlation Heatmap"
-      });
-    }
-
-    // math.corr helper
-    math.import({
-      corr: function (a, b) {
-        const n = Math.min(a.length, b.length);
-        const avgA = math.mean(a);
-        const avgB = math.mean(b);
-        let cov = 0, stdA = 0, stdB = 0;
-        for (let i = 0; i < n; i++) {
-          cov += (a[i] - avgA) * (b[i] - avgB);
-          stdA += (a[i] - avgA) ** 2;
-          stdB += (b[i] - avgB) ** 2;
+      const config = (label, dataset, color) => ({
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: label,
+            data: dataset,
+            backgroundColor: color
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            x: {
+              ticks: { maxRotation: 90, minRotation: 45 }
+            }
+          }
         }
-        return cov / Math.sqrt(stdA * stdB);
-      }
-    });
+      });
 
-    // Main
-    loadData().then(data => {
-      const keys = Object.keys(data[0]);
-      const numericKeys = keys.filter(k => typeof data[0][k] === 'number' || !isNaN(+data[0][k]));
+      temperatureChart = new Chart(
+        document.getElementById('temperatureChart'),
+        config('Temperature (°C)', temps, 'rgba(255, 99, 132, 0.7)')
+      );
+      humidityChart = new Chart(
+        document.getElementById('humidityChart'),
+        config('Humidity (%)', humidity, 'rgba(54, 162, 235, 0.7)')
+      );
+      windChart = new Chart(
+        document.getElementById('windChart'),
+        config('Wind Speed (km/h)', wind, 'rgba(75, 192, 192, 0.7)')
+      );
+    }
 
-      const summary = summarize(data, numericKeys);
-      renderSummaryTable(summary);
-      renderHeatmap(data, numericKeys);
-      renderHistograms(data, numericKeys);
-    });
+    fetchData();
   </script>
 </body>
 </html>
