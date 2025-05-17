@@ -2,88 +2,176 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Chef's Lab</title>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;600&display=swap" rel="stylesheet">
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Montserrat', sans-serif;
-    }
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Data Science Lab - Weather Analysis</title>
 
+  <style>
+    /* Color theme: Black, Off-White, White, Grey */
     body {
-      background-color: #121212;
-      color: #ffffff;
-      padding: 40px 20px;
-      text-align: center;
+      background-color: #0a0a0a; /* pure black */
+      color: #eaeaea; /* off-white */
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0; padding: 20px;
     }
 
     h1 {
-      font-size: 2.5rem;
+      text-align: center;
       margin-bottom: 30px;
       color: #f5f5f5;
+      letter-spacing: 1.5px;
     }
 
-    .intro {
-      font-size: 1.1rem;
-      color: #cccccc;
-      margin-bottom: 40px;
-      max-width: 800px;
-      margin-left: auto;
-      margin-right: auto;
+    #search-container {
+      text-align: left;
+      margin-bottom: 15px;
     }
 
-    .lab-section {
-      background-color: #1e1e1e;
-      padding: 20px;
-      margin: 20px auto;
+    input[type="text"] {
+      width: 300px;
+      padding: 8px 12px;
+      font-size: 16px;
+      border-radius: 6px;
+      border: 2px solid #555;
+      background-color: #222;
+      color: #eee;
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
+
+    input[type="text"]:focus {
+      border-color: #ccc;
+      background-color: #111;
+    }
+
+    #chart-container {
+      max-width: 900px;
+      margin: 0 auto;
+      background-color: #121212;
       border-radius: 10px;
-      max-width: 800px;
-      box-shadow: 0 0 10px rgba(255,255,255,0.05);
+      padding: 20px;
+      box-shadow: 0 0 10px #333;
     }
 
-    h2 {
-      color: #ffffff;
-      margin-bottom: 10px;
-    }
-
-    p {
-      color: #bbbbbb;
-    }
-
-    footer {
-      margin-top: 60px;
-      font-size: 0.9rem;
+    #info {
+      max-width: 900px;
+      margin: 20px auto;
+      font-size: 14px;
       color: #888;
+      text-align: center;
     }
   </style>
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-  <nav style="background-color: #1a1a1a; padding: 15px 0; text-align: center; border-bottom: 1px solid #333;">
-  <a href="index.html" style="color: #f5f5f5; margin: 0 15px; text-decoration: none; font-weight: bold;">Home</a>
-  <a href="explore.html" style="color: #f5f5f5; margin: 0 15px; text-decoration: none; font-weight: bold;">Explore</a>
-  <a href="flags.html" style="color: #f5f5f5; margin: 0 15px; text-decoration: none; font-weight: bold;">Flags</a>
-  <a href="lab.html" style="color: #f5f5f5; margin: 0 15px; text-decoration: none; font-weight: bold;">Lab</a>
-  </nav>
 
-  <h1>Inside the Chef’s Lab</h1>
-  <p class="intro">Welcome to the heart of my experiments. Here, I mix data with taste, stories with stats, and flavors with flags.</p>
+  <h1>Weather Data Analysis Lab</h1>
 
-  <div class="lab-section">
-    <h2>Current Project</h2>
-    <p>Analyzing how food habits vary across regions. Combining culinary data with visual storytelling.</p>
+  <div id="search-container">
+    <input type="text" id="countrySearch" placeholder="Search for a country..." />
   </div>
 
-  <div class="lab-section">
-    <h2>Next Steps</h2>
-    <p>Country-wise food culture pages, interactive timelines, and more data-driven food tales.</p>
+  <div id="chart-container">
+    <canvas id="weatherChart"></canvas>
   </div>
 
-  <footer>
-    &copy; 2025 TravelWithChef | Crafted with code & spice.
-  </footer>
+  <div id="info">Type a country name to view its weather data chart</div>
 
+  <script>
+    let weatherData = {};
+    let chart = null;
+
+    async function loadData() {
+      try {
+        const response = await fetch('data/weather-data.json');
+        weatherData = await response.json();
+        document.getElementById('info').textContent = 'Enter a country name above to see the weather trend.';
+      } catch (error) {
+        document.getElementById('info').textContent = 'Failed to load data.';
+        console.error('Error loading weather data:', error);
+      }
+    }
+
+    function createChart(labels = [], temps = []) {
+      const ctx = document.getElementById('weatherChart').getContext('2d');
+      if(chart) chart.destroy();
+
+      chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Avg Temperature (°C)',
+            data: temps,
+            borderColor: '#eaeaea',
+            backgroundColor: 'rgba(234,234,234,0.2)',
+            borderWidth: 2,
+            tension: 0.3,
+            fill: true,
+            pointRadius: 3,
+            pointHoverRadius: 6,
+            pointBackgroundColor: '#fff'
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              labels: { color: '#eaeaea', font: { size: 14 } }
+            },
+            tooltip: {
+              enabled: true,
+              backgroundColor: '#222',
+              titleColor: '#fff',
+              bodyColor: '#fff'
+            }
+          },
+          scales: {
+            x: {
+              ticks: { color: '#bbb' },
+              grid: { color: '#222' }
+            },
+            y: {
+              ticks: { color: '#bbb' },
+              grid: { color: '#222' }
+            }
+          }
+        }
+      });
+    }
+
+    function updateChart(country) {
+      if (!weatherData[country]) {
+        document.getElementById('info').textContent = `No data found for "${country}". Try another.`;
+        createChart([], []);
+        return;
+      }
+
+      const countryData = weatherData[country];
+      createChart(countryData.dates, countryData.temps);
+      document.getElementById('info').textContent = `Showing weather data for ${country}`;
+    }
+
+    document.getElementById('countrySearch').addEventListener('input', (e) => {
+      const input = e.target.value.trim();
+      if(input.length >= 2) {
+        const matched = Object.keys(weatherData).find(c =>
+          c.toLowerCase().startsWith(input.toLowerCase())
+        );
+        if(matched) {
+          updateChart(matched);
+        } else {
+          createChart([], []);
+          document.getElementById('info').textContent = 'No matching country found.';
+        }
+      } else {
+        createChart([], []);
+        document.getElementById('info').textContent = 'Enter at least 2 characters to search.';
+      }
+    });
+
+    loadData();
+  </script>
 </body>
 </html>
