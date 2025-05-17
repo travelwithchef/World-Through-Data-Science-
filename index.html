@@ -3,145 +3,189 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Explore Countries</title>
+  <title>World Gallery</title>
   <style>
     body {
       margin: 0;
-      background-color: #111;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #000;
+      color: #f2f2f2;
     }
 
     .slider-container {
-      width: 90%;
-      max-width: 800px;
-      overflow: hidden;
-      border-radius: 10px;
-      box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
       position: relative;
+      overflow: hidden;
+      width: 100%;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .slider {
       display: flex;
-      transition: transform 0.5s ease-in-out;
+      transition: transform 0.6s ease-in-out;
+      will-change: transform;
     }
 
-    .slider img {
-      width: 100%;
+    .slide {
+      min-width: 100vw;
+      height: 100vh;
+      position: relative;
       flex-shrink: 0;
-      height: auto;
-      border-radius: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #111;
     }
 
-    .nav-btn {
+    .slide img {
+      width: 90%;
+      max-height: 80vh;
+      border-radius: 12px;
+      box-shadow: 0 8px 30px rgba(255, 255, 255, 0.1);
+    }
+
+    .overlay-text {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: rgba(0, 0, 0, 0.6);
+      padding: 12px 24px;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 1.5rem;
+      font-weight: bold;
+      opacity: 0;
+      animation: fadeIn 1.2s ease forwards;
+    }
+
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+
+    .nav-buttons {
       position: absolute;
       top: 50%;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
       transform: translateY(-50%);
-      background: rgba(255, 255, 255, 0.3);
-      color: white;
-      border: none;
-      padding: 10px 15px;
-      cursor: pointer;
-      font-size: 20px;
-      z-index: 1;
+      padding: 0 20px;
+      box-sizing: border-box;
     }
 
-    .prev { left: 10px; }
-    .next { right: 10px; }
+    .nav-buttons button {
+      background-color: rgba(255,255,255,0.1);
+      border: none;
+      color: white;
+      font-size: 2rem;
+      padding: 10px;
+      cursor: pointer;
+      border-radius: 50%;
+      transition: background 0.3s;
+    }
+
+    .nav-buttons button:hover {
+      background-color: rgba(255,255,255,0.3);
+    }
+
+    .dots {
+      position: absolute;
+      bottom: 20px;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .dot {
+      height: 10px;
+      width: 10px;
+      background-color: grey;
+      border-radius: 50%;
+      display: inline-block;
+      transition: background-color 0.3s ease;
+    }
+
+    .dot.active {
+      background-color: white;
+    }
   </style>
 </head>
 <body>
 
-<div class="slider-container">
-  <div class="slider" id="slider">
-    <!-- Your country images go here -->
-    <img src="algeria.png" alt="Algeria">
-    <img src="zimbabwe.png" alt="Zimbabwe">
-    <img src="azerbaijan.png" alt="Azerbaijan">
-    <img src="bahrain.png" alt="Bahrain">
-    <img src="china.png" alt="China">
-    <img src="india.png" alt="India">
-    <img src="iran.png" alt="Iran">
-    <img src="japan.png" alt="Japan">
-    <img src="jordan.png" alt="Jordan">
-    <img src="malaysia.png" alt="Malaysia">
-    <img src="mongolia.png" alt="Mongolia">
-    <img src="pakistan.png" alt="Pakistan">
-    <img src="palestine.png" alt="Palestine">
-    <img src="saudi-arabia.png" alt="Saudi Arabia">
-    <img src="sri-lanka.png" alt="Sri Lanka">
-    <img src="turkey.png" alt="Turkey">
-    <img src="yemen.png" alt="Yemen">
-    <img src="vietnam.png" alt="Vietnam">
-    <img src="austria.png" alt="Austria">
-    <img src="bulgaria.png" alt="Bulgaria">
-    <img src="france.png" alt="France">
-    <img src="germany.png" alt="Germany">
-    <img src="greece.png" alt="Greece">
-    <img src="hungary.png" alt="Hungary">
-    <img src="italy.png" alt="Italy">
-    <img src="monaco.png" alt="Monaco">
-    <img src="macedonia.png" alt="Macedonia">
-    <img src="portugal.png" alt="Portugal">
-    <img src="romania.png" alt="Romania">
-    <img src="russia.png" alt="Russia">
-    <img src="san-marino.png" alt="San Marino">
-    <img src="spain.png" alt="Spain">
-    <img src="switzerland.png" alt="Switzerland">
-    <img src="vetican-city.png" alt="Vetican City">
-    <img src="antigua-and-barbuda.png" alt="Antigua and Barbuda">
-    <img src="costa-rica.png" alt="Costa Rica">
-    <img src="el-salvador.png" alt="El Salvador">
-    <img src="saint-lucia.png" alt="Saint Lucia">
-    <img src="usa.png" alt="USA">
-    <img src="argentina.png" alt="Argentina">
-    <img src="brazil.png" alt="Brazil">
-    <img src="guyana.png" alt="Guyana">
-    <img src="paraguay.png" alt="Paraguay">
-    <img src="uruguay.png" alt="Uruguay">
-    <img src="australia.png" alt="Australia">
-    <img src="new-zealand.png" alt="New Zealand">
-    <img src="solomon-islands.png" alt="Solomon Islands">
+  <div class="slider-container">
+    <div class="slider" id="slider">
+      <!-- Slides inserted dynamically -->
+    </div>
+
+    <div class="nav-buttons">
+      <button onclick="prevSlide()">‹</button>
+      <button onclick="nextSlide()">›</button>
+    </div>
+
+    <div class="dots" id="dots"></div>
   </div>
 
-  <button class="nav-btn prev" onclick="prevSlide()">‹</button>
-  <button class="nav-btn next" onclick="nextSlide()">›</button>
-</div>
+  <script>
+    const images = [
+      'algeria.png','zimbabwe.png','azerbaijan.png','bahrain.png','china.png',
+      'india.png','iran.png','japan.png','jordan.png','malaysia.png','mongolia.png',
+      'pakistan.png','palestine.png','saudi-arabia.png','sri-lanka.png','turkey.png',
+      'yemen.png','vietnam.png','austria.png','bulgaria.png','france.png','germany.png',
+      'greece.png','hungary.png','italy.png','monaco.png','macedonia.png','portugal.png',
+      'romania.png','russia.png','spain.png','switzerland.png','vetican-city.png',
+      'antigua-and-barbuda.png','costa-rica.png','el-salvador.png','Saint-lucia-png',
+      'usa.png','argentina.png','brazil.png','guyana.png','paraguay.png','uruguay.png',
+      'australia.png','new-zealand.png','solomon-islands.png'
+    ];
 
-<script>
-  const slider = document.getElementById('slider');
-  const totalSlides = slider.children.length;
-  let currentIndex = 0;
+    const slider = document.getElementById("slider");
+    const dots = document.getElementById("dots");
 
-  function showSlide(index) {
-    slider.style.transform = `translateX(-${index * 100}%)`;
-  }
+    images.forEach((img, index) => {
+      const countryName = img.replace(/[-_]/g, ' ').replace('.png', '').replace(/\b\w/g, l => l.toUpperCase());
 
-  function nextSlide() {
-    currentIndex = (currentIndex + 1) % totalSlides;
-    showSlide(currentIndex);
-  }
+      const slide = document.createElement("div");
+      slide.className = "slide";
+      slide.innerHTML = `
+        <img src="${img}" alt="${countryName}">
+        <div class="overlay-text">${countryName}</div>
+      `;
+      slider.appendChild(slide);
 
-  function prevSlide() {
-    currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
-    showSlide(currentIndex);
-  }
+      const dot = document.createElement("span");
+      dot.className = "dot";
+      dot.onclick = () => goToSlide(index);
+      dots.appendChild(dot);
+    });
 
-  // Swipe Support
-  let startX = 0;
-  slider.addEventListener('touchstart', e => {
-    startX = e.touches[0].clientX;
-  });
+    let currentSlide = 0;
+    updateSlider();
 
-  slider.addEventListener('touchend', e => {
-    let endX = e.changedTouches[0].clientX;
-    if (startX - endX > 50) nextSlide();
-    else if (endX - startX > 50) prevSlide();
-  });
-</script>
+    function updateSlider() {
+      slider.style.transform = `translateX(-${currentSlide * 100}vw)`;
+      document.querySelectorAll(".dot").forEach((d, i) =>
+        d.classList.toggle("active", i === currentSlide)
+      );
+    }
 
+    function nextSlide() {
+      currentSlide = (currentSlide + 1) % images.length;
+      updateSlider();
+    }
+
+    function prevSlide() {
+      currentSlide = (currentSlide - 1 + images.length) % images.length;
+      updateSlider();
+    }
+
+    function goToSlide(index) {
+      currentSlide = index;
+      updateSlider();
+    }
+  </script>
 </body>
 </html>
