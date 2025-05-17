@@ -1,5 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -10,120 +9,129 @@
       background-color: #000;
       color: #f2f2f2;
       font-family: 'Segoe UI', sans-serif;
-    }
+    }.slider {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
 
-    .slider {
-      position: relative;
-      width: 100%;
-      height: 100vh;
-      overflow: hidden;
-    }
+.slides {
+  display: flex;
+  transition: transform 0.8s ease-in-out;
+  height: 100%;
+}
 
-    .slides {
-      display: flex;
-      transition: transform 0.8s ease-in-out;
-      height: 100%;
-    }
+.slide {
+  min-width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  background-color: #111;
+}
 
-    .slide {
-      min-width: 100%;
-      height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      position: relative;
-      background-color: #111;
-    }
+.slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background-color: #000;
+  transition: transform 0.5s ease;
+}
 
-    .slide img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      background-color: #000;
-    }
+.slide:hover img {
+  transform: scale(1.03);
+}
 
-    .caption {
-      position: absolute;
-      bottom: 40px;
-      left: 50%;
-      transform: translateX(-50%);
-      background-color: rgba(0, 0, 0, 0.6);
-      color: white;
-      padding: 10px 20px;
-      font-size: 1.5rem;
-      border-radius: 8px;
-      backdrop-filter: blur(5px);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
+.caption {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+  padding: 10px 20px;
+  font-size: 1.5rem;
+  border-radius: 8px;
+  backdrop-filter: blur(5px);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
 
-    .nav {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 3rem;
-      color: #fff;
-      background-color: rgba(255, 255, 255, 0.1);
-      padding: 0 15px;
-      cursor: pointer;
-      z-index: 10;
-      user-select: none;
-    }
+.nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 3rem;
+  color: #fff;
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 0 15px;
+  cursor: pointer;
+  z-index: 10;
+  user-select: none;
+}
 
-    .nav.left {
-      left: 10px;
-    }
+.nav.left {
+  left: 10px;
+}
 
-    .nav.right {
-      right: 10px;
-    }
+.nav.right {
+  right: 10px;
+}
 
-    .dots {
-      position: absolute;
-      bottom: 15px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      gap: 8px;
-    }
+.dots {
+  position: absolute;
+  bottom: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+}
 
-    .dot {
-      width: 12px;
-      height: 12px;
-      background-color: #999;
-      border-radius: 50%;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
+.dot {
+  width: 12px;
+  height: 12px;
+  background-color: #999;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background 0.3s;
+}
 
-    .dot.active {
-      background-color: #fff;
-    }
+.dot.active {
+  background-color: #fff;
+}
 
-    @media (max-width: 768px) {
-      .caption {
-        font-size: 1rem;
-      }
+.progress-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 4px;
+  background-color: #ccc;
+  transition: width 0.1s linear;
+  z-index: 5;
+}
 
-      .nav {
-        font-size: 2rem;
-      }
-    }
+@media (max-width: 768px) {
+  .caption {
+    font-size: 1rem;
+  }
+
+  .nav {
+    font-size: 2rem;
+  }
+}
+
   </style>
 </head>
 <body>
   <div class="slider">
-    <div class="slides" id="slides">
-      <!-- Slides will be injected here -->
-    </div>
-
+    <div class="progress-bar" id="progressBar"></div>
+    <div class="slides" id="slides"></div>
     <div class="nav left" onclick="prevSlide()">‹</div>
     <div class="nav right" onclick="nextSlide()">›</div>
-
     <div class="dots" id="dots"></div>
-  </div>
-
-  <script>
+  </div>  <script>
     const imageList = [
       "algeria.png", "zimbabwe.png", "azerbaijan.png", "bahrain.png",
       "china.png", "india.png", "iran.png", "japan.png", "jordan.png",
@@ -148,6 +156,7 @@
 
     const slidesContainer = document.getElementById('slides');
     const dotsContainer = document.getElementById('dots');
+    const progressBar = document.getElementById('progressBar');
 
     imageList.forEach((img, i) => {
       const slide = document.createElement('div');
@@ -173,9 +182,7 @@
       if (index >= imageList.length) index = 0;
       currentIndex = index;
       slidesContainer.style.transform = `translateX(-${index * 100}%)`;
-      dots.forEach((dot, i) =>
-        dot.classList.toggle('active', i === index)
-      );
+      dots.forEach((dot, i) => dot.classList.toggle('active', i === index));
     };
 
     const prevSlide = () => showSlide(currentIndex - 1);
@@ -183,10 +190,18 @@
 
     showSlide(0);
 
-    // Auto-slide
-    setInterval(() => {
+    // Auto-slide with progress bar
+    let intervalTime = 6000;
+    let elapsed = 0;
+    let autoSlide = setInterval(() => {
       nextSlide();
-    }, 6000);
-  </script>
-</body>
+      elapsed = 0;
+    }, intervalTime);
+
+    setInterval(() => {
+      elapsed += 100;
+      const percent = (elapsed / intervalTime) * 100;
+      progressBar.style.width = percent + '%';
+    }, 100);
+  </script></body>
 </html>
